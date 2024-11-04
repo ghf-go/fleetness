@@ -2,11 +2,13 @@ package core
 
 import (
 	"encoding/json"
+	"io"
 	"net/http"
 	"strings"
 	"time"
 
 	"github.com/ghf-go/fleetness/core/conf"
+	"github.com/redis/go-redis/v9"
 	uuid "github.com/satori/go.uuid"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -114,7 +116,7 @@ func (c *GContent) GetDB(dbname ...string) *gorm.DB {
 		return r
 	}
 	if dbconf, ok := c.confData.Dbs[conName]; ok {
-		db, e := gorm.Open(mysql.Open(dbconf.Write, &gorm.Config{}))
+		db, e := gorm.Open(mysql.Open(dbconf.Write), &gorm.Config{})
 		if e != nil {
 			panic(e.Error())
 		}
@@ -135,13 +137,42 @@ func (c *GContent) GetDB(dbname ...string) *gorm.DB {
 }
 
 // 获取缓存配置
-func (c *GContent) GetCache() {}
+func (c *GContent) GetCache(conname ...string) *redis.Client {
+	conName := "default"
+	if len(conname) > 0 {
+		conName = conname[0]
+	}
+	if r, ok := cacheCon[conName]; ok {
+		return r
+	}
+	if rconf, ok := c.confData.Cache[conName]; ok {
+		r := redis.NewClient(&redis.Options{
+			Addr:            rconf.Host,
+			Username:        rconf.UserName,
+			Password:        rconf.Passwd,
+			MinIdleConns:    rconf.MinIdleConns,
+			MaxIdleConns:    rconf.MaxIdleConns,
+			MaxActiveConns:  rconf.MaxActiveConns,
+			ConnMaxIdleTime: time.Minute * time.Duration(rconf.ConnMaxIdleTime),
+			ConnMaxLifetime: time.Minute * time.Duration(rconf.ConnMaxLifetime),
+		})
+		cacheCon[conName] = r
+		return r
+	}
+	panic("缓存配置不存在" + conName)
+
+}
 
 // 绑定数据
-func (c *GContent) BindXml() {}
-
-// 绑定数据
-func (c *GContent) BindJson() {}
+func (c *GContent) BindJson(obj any) error {
+	body := c.r.Body
+	defer body.Close()
+	data, e := io.ReadAll(body)
+	if e != nil {
+		return e
+	}
+	return json.Unmarshal(data, obj)
+}
 
 // 发送队列
 func (c *GContent) SendMq() {}
