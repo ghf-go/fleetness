@@ -1,0 +1,17 @@
+app:
+  port: 9001
+dbs:
+  default:
+    dnmane: test
+    charset: utf8mb4
+    max_idle_cons: 5
+    max_open_cons: 10
+    con_max_idle_time: 600
+    con_max_life_time: 3600
+    write: ""
+    reads:
+      - "dnsdsad"
+      - "sadfsdf"
+cache:
+mq:
+log:
