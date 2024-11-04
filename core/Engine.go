@@ -1,8 +1,13 @@
 package core
 
 import (
+	"context"
 	"fmt"
 	"net/http"
+	"os"
+	"os/signal"
+	"syscall"
+	"time"
 
 	"github.com/ghf-go/fleetness/core/conf"
 	"gopkg.in/yaml.v3"
@@ -28,17 +33,26 @@ func (ge *GEngine) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "OPTIONS" {
 		w.Header().Set("Access-Control-Allow-Origin", "*")
 		w.Header().Set("Access-Control-Allow-Methods", "POST,OPTIONS,GET")
-		w.Header().Set("content-type", "application/json;charset=utf8")
 		w.Header().Set("Access-Control-Allow-Headers", "Appid,Appver,x-requested-with,Token,content-type,Cookie,Authorization,Sid,Set-Cookie,Access-Control-Allow-Origin")
 		w.WriteHeader(204)
 		return
 	}
 	w.Header().Set("Access-Control-Allow-Origin", "*")
-	w.Write([]byte("sadfsdfsd"))
+	AppDebug("请求接口 %s %s", r.URL.Path, r.URL.RawQuery)
+	isOk, hands := ge.webRouter.FindHandle(r.Method, r.URL.Path)
+	c := newWebGContent(ge.confData, w, r, hands)
+	if isOk {
+		c.Next()
+	} else {
+		c.Next()
+	}
+
 }
 
 // 是否debug运行
-func (ge *GEngine) SetDebug(isdebug bool) {}
+func (ge *GEngine) SetDebug(isdebug bool) {
+	isAppDebug = isdebug
+}
 
 // 程序开始运行
 func (ge *GEngine) Run() {
@@ -46,12 +60,17 @@ func (ge *GEngine) Run() {
 		Addr:    fmt.Sprintf(":%d", ge.confData.App.Port),
 		Handler: ge,
 	}
-	func() {
+	go func() {
 		if e := hserver.ListenAndServe(); e != nil {
 			panic(e.Error())
 		}
 	}()
-	fmt.Println("----")
+	sigc := make(chan os.Signal, 1)
+	signal.Notify(sigc, syscall.SIGINT, syscall.SIGKILL, syscall.SIGTERM)
+	<-sigc
+	ct, cancel := context.WithTimeout(context.Background(), time.Second*5)
+	defer cancel()
+	hserver.Shutdown(ct)
 }
 
 // 注册消息队列
@@ -70,3 +89,22 @@ func (ge *GEngine) RegisterVue() {}
 
 // 注册模版
 func (ge *GEngine) RegisterTemplate() {}
+
+func (ge *GEngine) RouterPost(path string, hand Handle, args ...Handle) {
+	ge.webRouter.Post(path, hand, args...)
+}
+func (ge *GEngine) RouterGet(path string, hand Handle, args ...Handle) {
+	ge.webRouter.Get(path, hand, args...)
+}
+func (ge *GEngine) RouterAny(path string, hand Handle, args ...Handle) {
+	ge.webRouter.Any(path, hand, args...)
+}
+func (ge *GEngine) RouterDelete(path string, hand Handle, args ...Handle) {
+	ge.webRouter.Delete(path, hand, args...)
+}
+func (ge *GEngine) RouterPut(path string, hand Handle, args ...Handle) {
+	ge.webRouter.Post(path, hand, args...)
+}
+func (ge *GEngine) RouterGroup(path string, err404 Handle, args ...Handle) *WebRouter {
+	return ge.webRouter.Group(path, err404, args...)
+}

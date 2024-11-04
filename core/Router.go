@@ -9,17 +9,25 @@ type WebRouter struct {
 	groups     map[string]*WebRouter
 	methods    map[string][]Handle
 	middlefunc []Handle
+	err404     Handle
 }
 
 func newRootRouter(args ...Handle) *WebRouter {
+	args = append([]Handle{func(c *GContent) {
+		c.Next()
+		c.Flush()
+	}}, args...)
 	return &WebRouter{
 		groups:     map[string]*WebRouter{},
 		methods:    map[string][]Handle{},
 		middlefunc: args,
+		err404: func(c *GContent) {
+			c.FailJson(404, "接口不存在")
+		},
 	}
 }
 
-func (r *WebRouter) Group(path string, args ...Handle) *WebRouter {
+func (r *WebRouter) Group(path string, err404 Handle, args ...Handle) *WebRouter {
 	for strings.HasPrefix(path, "/") {
 		path = path[1:]
 	}
@@ -28,6 +36,7 @@ func (r *WebRouter) Group(path string, args ...Handle) *WebRouter {
 		groups:     map[string]*WebRouter{},
 		methods:    map[string][]Handle{},
 		middlefunc: append(r.middlefunc, args...),
+		err404:     err404,
 	}
 	r.groups[path] = nr
 	return nr
@@ -77,7 +86,9 @@ func (r *WebRouter) FindHandle(methodname, path string) (bool, []Handle) {
 	methodname = strings.ToUpper(methodname)
 	path = strings.ToLower(path)
 	ps := strings.Split(path, "/")
+	// fmt.Printf("路由信息 %s - %v\n", path, ps)
 	var rt *WebRouter
+	error404 := r.err404
 	funcs := r.middlefunc
 	for _, k := range ps {
 		if rt == nil {
@@ -87,6 +98,8 @@ func (r *WebRouter) FindHandle(methodname, path string) (bool, []Handle) {
 			}
 		} else {
 			funcs = rt.middlefunc
+			error404 = rt.err404
+
 			rt = rt.findPath(k)
 			if rt == nil {
 				break
@@ -94,17 +107,21 @@ func (r *WebRouter) FindHandle(methodname, path string) (bool, []Handle) {
 		}
 	}
 	if rt == nil {
-		return false, funcs
+		// fmt.Printf("没有找打路由 %d\n", len(append(funcs, error404)))
+		return false, append(funcs, error404)
 	}
 	if ffs, on := rt.methods[methodname]; on {
-		return true, ffs
+		return true, append(funcs, ffs...)
 	} else if ffs, on := rt.methods["ANY"]; on {
-		return true, ffs
+		return true, append(funcs, ffs...)
 	}
-	return false, nil
+	// fmt.Printf("没有找打路由 %d", len(append(funcs, error404)))
+	return false, append(funcs, error404)
 }
 func (r *WebRouter) findPath(name string) *WebRouter {
+	// fmt.Printf("查找信息 %s -> %v\n", name, r.groups)
 	if rr, ok := r.groups[name]; ok {
+
 		return rr
 	}
 	return nil
