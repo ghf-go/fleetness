@@ -5,5 +5,6 @@ type Conf struct {
 	Dbs   map[string]dbConfig    `yaml:"dbs"`
 	Cache map[string]cacheConfig `yaml:"cache"`
 	Log   *LogConfig             `yaml:"LogConfig"`
+	Stmp  map[string]smtpConfig  `yaml:"smtp"`
 	Meta  MetaConf               `yaml:"meta"`
 }

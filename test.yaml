@@ -24,5 +24,11 @@ mq:
 log:
   driver: file
   dirpath:
+stmp:
+  default:
+    host:
+    username:
+    passwd:
+    authtype:
 meta:
   aa: dffd

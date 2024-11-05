@@ -1,9 +1,13 @@
 package core
 
 import (
+	"context"
 	"encoding/json"
+	"errors"
 	"io"
 	"net/http"
+	"net/smtp"
+	"strconv"
 	"strings"
 	"time"
 
@@ -25,6 +29,8 @@ type GContent struct {
 	isAbort       bool
 	currentNext   int
 	responseBytes []byte
+	userId        uint64
+	ctx           context.Context
 }
 
 // 新建GContent
@@ -38,6 +44,7 @@ func newWebGContent(confData *conf.Conf, w http.ResponseWriter, r *http.Request,
 		ReqID:       uuid.NewV4().String(),
 		isAbort:     false,
 		currentNext: 0,
+		ctx:         context.Background(),
 	}
 }
 
@@ -100,8 +107,9 @@ func (c *GContent) Next() {
 	if c.currentNext < len(c.handles) {
 		ci := c.currentNext
 		c.currentNext++
-		c.handles[ci](c)
-
+		if !c.isAbort {
+			c.handles[ci](c)
+		}
 	}
 
 }
@@ -125,7 +133,7 @@ func (c *GContent) GetDB(dbname ...string) *gorm.DB {
 			rs = append(rs, mysql.Open(rc))
 		}
 		db.Use(dbresolver.Register(dbresolver.Config{
-			Sources:  []gorm.Dialector{db},
+			Sources:  []gorm.Dialector{mysql.Open(dbconf.Write)},
 			Replicas: rs,
 		}).SetMaxIdleConns(dbconf.ConMaxIdleTime).SetMaxOpenConns(dbconf.MaxOpenCons).SetConnMaxIdleTime(time.Minute * time.Duration(dbconf.ConMaxIdleTime)).SetConnMaxLifetime(time.Minute * time.Duration(dbconf.ConMaxLifeTime)))
 		dbCon[conName] = db
@@ -209,13 +217,56 @@ func (c *GContent) Display() {}
 // 显示模版
 func (c *GContent) DisplayLayout() {}
 
-// 发送邮件
-func (c *GContent) SendMail() {}
-
 // 获取配置信息
 func (c *GContent) GetConf() *conf.Conf {
 	return c.confData
 }
 func (c *GContent) Flush() {
 	c.w.Write(c.responseBytes)
+}
+func (c *GContent) GetRequest() *http.Request {
+	return c.r
+}
+func (c *GContent) GetResponseWriter() http.ResponseWriter {
+	return c.w
+}
+func (c *GContent) SetUserID(uid string) {
+	if id, e := strconv.ParseUint(uid, 10, 64); e == nil {
+		c.userId = id
+	}
+}
+
+func (c *GContent) GetUserID() uint64 {
+	return c.userId
+}
+func (c *GContent) IsLogin() bool {
+	return c.userId > 0
+}
+func (c *GContent) GetContext() context.Context {
+	return c.ctx
+}
+
+// 发送邮件
+func (c *GContent) SendMail(conname, to, subject string, isHtml bool, msg []byte) error {
+	if sc, ok := c.confData.Stmp[conname]; ok {
+		var auth smtp.Auth
+		switch strings.ToUpper(sc.AuthType) {
+		case "CRAMMD5":
+			auth = smtp.CRAMMD5Auth(sc.UserName, sc.Passwd)
+		case "HOTMAIL":
+			auth = conf.NewHotmailStmpAuth(sc.UserName, sc.Passwd)
+		default:
+			auth = smtp.PlainAuth("", sc.UserName, sc.Passwd, sc.Host)
+		}
+		content_type := ""
+		if isHtml {
+			content_type = "Content-Type: text/html; charset=UTF-8"
+		} else {
+			content_type = "Content-Type: text/plain" + "; charset=UTF-8"
+		}
+		msg = []byte("To: " + to + "\r\nFrom: " + sc.UserName + "\r\nSubject: " + subject + "\r\n" + content_type + "\r\n\r\n" + string(msg))
+
+		return smtp.SendMail(sc.Host, auth, sc.UserName, []string{to}, msg)
+	}
+	return errors.New("配置不存在")
 }
