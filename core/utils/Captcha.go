@@ -2,6 +2,7 @@ package utils
 
 import (
 	"crypto/rand"
+	_ "embed"
 	"fmt"
 	"image"
 	"image/color"
