@@ -12,9 +12,9 @@ type UserBind struct {
 	BindType    int       `gorm:"column:bind_type;default:0;NOT NULL" json:"bind_type"`                 // 类型：1 手机号，2邮箱，2微信，4微博
 	BindVal     string    `gorm:"column:bind_val;NOT NULL" json:"bind_val"`                             // 绑定账号，例如手机号或者微信 openid
 	BindDisplay string    `gorm:"column:bind_display;NOT NULL" json:"bind_display"`                     // 绑定账号的名称，例如微信昵称
-	CreateAt    time.Time `gorm:"column:create_at;default:CURRENT_TIMESTAMP;NOT NULL" json:"create_at"` // 创建时间
+	CreateAt    time.Time `gorm:"->;column:create_at;default:CURRENT_TIMESTAMP;NOT NULL" json:"create_at"` // 创建时间
 	CreateIP    string    `gorm:"column:create_ip;NOT NULL" json:"create_ip"`                           // 创建IP
-	UpdateAt    time.Time `gorm:"column:update_at;default:CURRENT_TIMESTAMP;NOT NULL" json:"update_at"` // 更新时间
+	UpdateAt    time.Time `gorm:"->;column:update_at;default:CURRENT_TIMESTAMP;NOT NULL" json:"update_at"` // 更新时间
 	UpdateIP    string    `gorm:"column:update_ip;NOT NULL" json:"update_ip"`                           // 更新IP
 }
 

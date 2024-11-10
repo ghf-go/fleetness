@@ -1,5 +1,19 @@
 package logic
 
+import (
+	"github.com/ghf-go/fleetness/core"
+	"github.com/ghf-go/fleetness/core/utils"
+	"github.com/redis/go-redis/v9"
+	"gorm.io/gorm"
+)
+
+const (
+	TYPE_MOBILE = 1
+	TYPE_EMAIL  = 2
+	TYPE_WECHAT = 3
+	TYPE_WEIBO  = 4
+)
+
 var (
 	dbConName    = "default"
 	cacheConName = "default"
@@ -11,9 +25,15 @@ func SetDbConName(name string) {
 func SetCacheConName(name string) {
 	cacheConName = name
 }
-func GetDbConName() string {
-	return dbConName
+
+func GetDB(c *core.GContent) *gorm.DB {
+	return c.GetDB(dbConName)
 }
-func GetCacheConName() string {
-	return cacheConName
+func GetCahce(c *core.GContent) *redis.Client {
+	return c.GetCache(cacheConName)
+}
+
+// 密码加密
+func Passwd(pass, sign string) string {
+	return utils.Md5(pass + "_" + sign)
 }
