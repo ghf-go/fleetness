@@ -6,13 +6,13 @@ dbs:
     max_open_cons: 10
     con_max_idle_time: 600
     con_max_life_time: 3600
-    write: "root:@tcp(127.0.0.1)/test?charset=utf8mb4&parseTime=True&loc=Local"
+    write: "root:@tcp(127.0.0.1)/go_dev?charset=utf8mb4&parseTime=True&loc=Local"
     reads:
-      - "root:@tcp(127.0.0.1)/test?charset=utf8mb4&parseTime=True&loc=Local"
-      - "root:@tcp(127.0.0.1)/test?charset=utf8mb4&parseTime=True&loc=Local"
+      - "root:@tcp(127.0.0.1)/go_dev?charset=utf8mb4&parseTime=True&loc=Local"
+      - "root:@tcp(127.0.0.1)/go_dev?charset=utf8mb4&parseTime=True&loc=Local"
 cache:
   default:
-    host:
+    host: 127.0.0.1
     username:
     passwd:
     max_idle_cons: 5

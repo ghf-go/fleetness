@@ -1,6 +1,8 @@
 package account
 
-import "github.com/ghf-go/fleetness/core"
+import (
+	"github.com/ghf-go/fleetness/core"
+)
 
 // 密码登录
 func LoginByPass(c *core.GContent) {}

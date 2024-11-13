@@ -9,6 +9,14 @@ import (
 
 const letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
+func BuildIntsToString(ids ...uint64) string {
+	ret := []string{}
+	for _, i := range ids {
+		ret = append(ret, fmt.Sprint(i))
+	}
+	return strings.Join(ret, ",")
+}
+
 // 生成随机字符串
 func RandStr(n int) string {
 	b := make([]byte, n)
