@@ -29,21 +29,25 @@ func praiseAction(c *core.GContent) {
 			"is_my": true,
 		})
 	} else {
-		tx := db.Begin()
+		tx := db.Begin().Debug()
 		if tx.Create(&model.Praise{
 			UserID:     c.GetUserID(),
 			TargetType: req.TargetType,
 			TargetID:   req.TargetId,
+			CreateIP:   c.GetIP(),
+			UpdateIP:   c.GetIP(),
 		}).Error != nil {
 			tx.Rollback()
 			c.FailJson(500, "操作失败")
 			return
 		}
 
-		if tx.Model(stat).Where("target_type=? AND target_id=?", req.TargetType, req.TargetId).Update("target_counts", gorm.Expr("target_counts+?", 1)).Error != nil && tx.Create(&model.PraiseStat{
+		if tx.Model(stat).Where("target_type=? AND target_id=?", req.TargetType, req.TargetId).Update("target_counts", gorm.Expr("target_counts+?", 1)).RowsAffected == 0 && tx.Create(&model.PraiseStat{
 			TargetType:   req.TargetType,
 			TargetID:     req.TargetId,
 			TargetCounts: 1,
+			CreateIP:     c.GetIP(),
+			UpdateIP:     c.GetIP(),
 		}).Error != nil {
 			tx.Rollback()
 			c.FailJson(500, "操作失败")
