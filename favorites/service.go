@@ -6,9 +6,20 @@ import (
 	"github.com/ghf-go/fleetness/favorites/model"
 )
 
+// 获取我的收藏列表
+func GetMyFavorites(c *core.GContent, uid uint64, targetType uint, offset, pagesize int) []uint64 {
+	ret := []uint64{}
+	flist := []model.Favorite{}
+	getDB(c).Order("create_at DESC").Offset(offset).Limit(pagesize).Find(&flist, "target_type=? AND user_id=?", targetType, uid)
+	for _, item := range flist {
+		ret = append(ret, item.TargetID)
+	}
+	return ret
+}
+
 // 获取收藏信息
 func GetFavorite(c *core.GContent, targetType uint, ids ...uint64) map[uint64]map[string]any {
-	db := GetDB(c)
+	db := getDB(c)
 	uid := c.GetUserID()
 	slist := []model.FavoriteStat{}
 	flist := []model.Favorite{}

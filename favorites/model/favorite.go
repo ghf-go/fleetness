@@ -8,7 +8,7 @@ import (
 // 收藏
 type Favorite struct {
 	ID         uint64    `gorm:"column:id;primary_key;AUTO_INCREMENT" json:"id"`
-	UserID     uint      `gorm:"column:user_id;default:0;NOT NULL" json:"user_id"`                     // 用户ID
+	UserID     uint64      `gorm:"column:user_id;default:0;NOT NULL" json:"user_id"`                     // 用户ID
 	TargetType uint      `gorm:"column:target_type;default:0;NOT NULL" json:"target_type"`             // 收藏类型
 	TargetID   uint64    `gorm:"column:target_id;default:0;NOT NULL" json:"target_id"`                 // 收藏ID
 	CreateAt   time.Time `gorm:"->;column:create_at;default:CURRENT_TIMESTAMP;NOT NULL" json:"create_at"` // 创建时间

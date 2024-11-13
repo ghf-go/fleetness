@@ -18,9 +18,15 @@ func SetCacheConName(name string) {
 	cacheConName = name
 }
 
-func GetDB(c *core.GContent) *gorm.DB {
+func getDB(c *core.GContent) *gorm.DB {
 	return c.GetDB(dbConName)
 }
-func GetCahce(c *core.GContent) *redis.Client {
+func getCache(c *core.GContent) *redis.Client {
 	return c.GetCache(cacheConName)
+}
+
+func Init(api, admin, command *core.WebRouter) {
+	g := api.Group("praise", nil)
+	g.Post("praise", praiseAction)
+	g.Post("unpraise", unPraiseAction)
 }

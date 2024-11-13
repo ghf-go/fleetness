@@ -6,8 +6,9 @@ import (
 	"github.com/ghf-go/fleetness/praise/model"
 )
 
+// 获取赞信息
 func GetPraise(c *core.GContent, targetType uint, ids ...uint64) map[uint64]map[string]any {
-	db := GetDB(c)
+	db := getDB(c)
 	uid := c.GetUserID()
 	slist := []model.PraiseStat{}
 	flist := []model.Praise{}
