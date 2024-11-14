@@ -30,3 +30,19 @@ CREATE TABLE `t_user_bind` (
     KEY `idx_uid` (`user_id`),
     UNIQUE KEY `uniq_val`(`bind_val`)
 ) ENGINE = innodb DEFAULT CHARSET = utf8mb4 COMMENT = '用户绑定账号信息';
+
+CREATE TABLE `t_user_info` (
+    `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+    `user_id` BIGINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '用户ID',
+    `ukey` VARCHAR(50) NOT NULL DEFAULT '' COMMENT '',
+    `uval` TEXT NOT NULL COMMENT '内容',
+    `newval` TEXT NOT NULL COMMENT '新内容',
+    `create_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `create_ip` VARCHAR(20) NOT NULL DEFAULT '' COMMENT '创建IP',
+    `update_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    `update_ip` VARCHAR(20) NOT NULL DEFAULT '' COMMENT '更新IP',
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `uniq_uid_key` (`user_id`,`ukey`),
+    KEY `idx_create` (`create_at`),
+    KEY `idx_update` (`update_at`)
+) ENGINE = innodb DEFAULT CHARSET = utf8mb4 COMMENT = '用户';

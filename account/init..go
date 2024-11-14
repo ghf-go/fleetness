@@ -2,19 +2,31 @@ package account
 
 import (
 	"github.com/ghf-go/fleetness/core"
+	"github.com/redis/go-redis/v9"
+	"gorm.io/gorm"
 )
 
-// 密码登录
-func LoginByPass(c *core.GContent) {}
+var (
+	dbConName    = "default"
+	cacheConName = "default"
+)
 
-// 修改密码
-func ChangePass(c *core.GContent) {}
+func SetDbConName(name string) {
+	dbConName = name
+}
+func SetCacheConName(name string) {
+	cacheConName = name
+}
 
-// 微信登录
-func LoginAppByWeixin(c *core.GContent) {}
+func getDB(c *core.GContent) *gorm.DB {
+	return c.GetDB(dbConName)
+}
+func getCahce(c *core.GContent) *redis.Client {
+	return c.GetCache(cacheConName)
+}
 
-// 微博登录
-func LoginAppWeibo(c *core.GContent) {}
-
-// 重置密码
-func ResetPass(c *core.GContent) {}
+func Init(api, admin, command *core.WebRouter) {
+	// g := api.Group("favorites", nil, core.ApiCheckoutLoginMiddleWare)
+	// g.Post("favorite", favoriteAction)
+	// g.Post("unfavorite", unFavoriteAction)
+}
