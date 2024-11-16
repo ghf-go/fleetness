@@ -37,6 +37,7 @@ CREATE TABLE `t_user_info` (
     `ukey` VARCHAR(50) NOT NULL DEFAULT '' COMMENT '',
     `uval` TEXT NOT NULL COMMENT '内容',
     `newval` TEXT NOT NULL COMMENT '新内容',
+    `is_audit` TINYINT NOT NULL DEFAULT 0 COMMENT '是否已审核',
     `create_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     `create_ip` VARCHAR(20) NOT NULL DEFAULT '' COMMENT '创建IP',
     `update_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
@@ -45,4 +46,4 @@ CREATE TABLE `t_user_info` (
     UNIQUE KEY `uniq_uid_key` (`user_id`,`ukey`),
     KEY `idx_create` (`create_at`),
     KEY `idx_update` (`update_at`)
-) ENGINE = innodb DEFAULT CHARSET = utf8mb4 COMMENT = '用户';
+) ENGINE = innodb DEFAULT CHARSET = utf8mb4 COMMENT = '用户信息表';
