@@ -13,13 +13,13 @@ func SetDbConName(name string) {
 	dbConName = name
 }
 func getDB(c *core.GContent) *gorm.DB {
-	return c.GetDB(dbConName)
+	return c.GetDB(dbConName).Debug()
 }
 func Init(api, admin, command *core.WebRouter) {
 	g := api.Group("feedback", nil, core.ApiCheckoutLoginMiddleWare)
 	g.Post("list", apiFeedBackListAction)
 	g.Post("send", apiFeedBackSendAction)
 	a := admin.Group("feedback", nil, core.ApiCheckoutLoginMiddleWare)
-	a.Post("list", adminFeedBackReplayAction)
-	a.Post("send", adminFeedListAction)
+	a.Post("send", adminFeedBackReplayAction)
+	a.Post("list", adminFeedListAction)
 }

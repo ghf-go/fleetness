@@ -29,7 +29,7 @@ func adminFeedListAction(c *core.GContent) {
 	ret := []model.Feedback{}
 	db := getDB(c).Offset((p.Page - 1) * p.PageSize).Limit(p.PageSize).Order("id desc")
 	if !p.IsAll {
-		db = db.Where("is_replay=1")
+		db = db.Where("is_replay=0")
 	}
 	db.Find(&ret)
 	c.SuccessJson(ret)
