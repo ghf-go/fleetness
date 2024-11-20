@@ -9,7 +9,7 @@ import (
 var (
 	dbConName        = "default"
 	cacheConName     = "default"
-	isSendAfterAudit = false
+	isSendAfterAudit = true
 )
 
 // 设置是否先发后审核
@@ -31,7 +31,7 @@ func getCahce(c *core.GContent) *redis.Client {
 }
 
 func Init(api, admin, command *core.WebRouter) {
-	g := api.Group("comment", nil, core.ApiCheckoutLoginMiddleWare)
+	g := api.Group("comment", nil)
 	g.Post("list", commentListAction)
 	g.Post("comment", commentAction)
 	// g.Post("favorite", favoriteAction)

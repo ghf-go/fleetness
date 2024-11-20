@@ -22,7 +22,9 @@ func IsEmail(name string) bool {
 // 判断发送的验证码
 func VerifyCode(r *redis.Client, code, key string) bool {
 	rk := fmt.Sprintf("verify:%s", key)
-	return r.Get(context.Background(), rk).String() == code
+	rc, _ := r.Get(context.Background(), rk).Result()
+	// fmt.Printf("验证码： (%s->%s) %v\n", rc, code, rc == code)
+	return rc == code
 }
 
 // 保存验证码

@@ -4,7 +4,9 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io"
+	"net"
 	"net/http"
 	"net/smtp"
 	"strconv"
@@ -244,6 +246,29 @@ func (c *GContent) IsLogin() bool {
 }
 func (c *GContent) GetContext() context.Context {
 	return c.ctx
+}
+
+// 通过本机发送邮件
+func (c *GContent) SendLocalMail(conname, to, subject string, isHtml bool, msg []byte) error {
+	i := strings.Index(to, "@")
+	host := to[i+1:]
+	if sc, ok := c.confData.Stmp[conname]; ok {
+		if dd, e := net.LookupMX(host); e == nil {
+			content_type := ""
+			if isHtml {
+				content_type = "Content-Type: text/html; charset=UTF-8"
+			} else {
+				content_type = "Content-Type: text/plain" + "; charset=UTF-8"
+			}
+			msg = []byte("To: " + to + "\r\nFrom: " + sc.UserName + "\r\nSubject: " + subject + "\r\n" + content_type + "\r\n\r\n" + string(msg))
+
+			return smtp.SendMail(dd[0].Host+":25", nil, sc.UserName, []string{to}, msg)
+		}
+		return errors.New("获取信息失败")
+	}
+	fmt.Println(c.confData.Stmp)
+	return errors.New("配置不存在" + conname)
+
 }
 
 // 发送邮件

@@ -27,7 +27,7 @@ func SetCacheConName(name string) {
 }
 
 func getDB(c *core.GContent) *gorm.DB {
-	return c.GetDB(dbConName)
+	return c.GetDB(dbConName).Debug()
 }
 func getCahce(c *core.GContent) *redis.Client {
 	return c.GetCache(cacheConName)
@@ -38,10 +38,12 @@ func passwd(pass, sign string) string {
 }
 
 func Init(api, admin, command *core.WebRouter) {
-	g := api.Group("account", nil, core.ApiCheckoutLoginMiddleWare)
+	g := api.Group("account", nil)
 	g.Post("login", loginByPassAction)
 	g.Post("register", registerAction)
 	g.Post("changepass", changePassAction)
 	g.Post("upinfo", setUserInfoAction)
 	g.Post("info", getUserInfoAction)
+	g.Post("bind", bindAccountAction)
+	g.Post("send_code", sendCodeAction)
 }

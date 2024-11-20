@@ -142,7 +142,7 @@ func changePassAction(c *core.GContent) {
 	}
 	user := &model.User{}
 	getDB(c).First(user, c.GetUserID())
-	if passwd(parmas.Pass, user.PassSign) != user.Passwd {
+	if passwd(parmas.OldPass, user.PassSign) != user.Passwd {
 		c.FailJson(403, "旧密码错误")
 		return
 	}
@@ -197,13 +197,19 @@ func bindAccountAction(c *core.GContent) {
 
 // 获取账号信息
 func getUserInfoAction(c *core.GContent) {
-
+	list := []model.UserInfo{}
+	getDB(c).Find(&list, "user_id=?", c.GetUserID())
+	ret := map[string]string{}
+	for _, item := range list {
+		ret[item.Ukey] = item.Newval
+	}
+	c.SuccessJson(ret)
 }
 
 // 保存账号信息
 func setUserInfoAction(c *core.GContent) {
 	p := map[string]string{}
-	if e := c.BindJson(p); e != nil {
+	if e := c.BindJson(&p); e != nil {
 		c.FailJson(403, e.Error())
 		return
 	}
@@ -228,4 +234,28 @@ func setUserInfoAction(c *core.GContent) {
 		}
 	}
 	c.SuccessJson("ok")
+}
+
+type sendCodeParam struct {
+	Name string `json:"name"`
+}
+
+// 发送验证码
+func sendCodeAction(c *core.GContent) {
+	p := &sendCodeParam{}
+	if e := c.BindJson(p); e != nil {
+		c.FailJson(403, "参数错误")
+		return
+	}
+	if utils.IsEmail(p.Name) {
+		code := utils.RandStr(6)
+		fmt.Printf("验证码：%s:%s\n", p.Name, code)
+		utils.VerifySaveCode(getCahce(c), code, p.Name, 600)
+		// if e := c.SendLocalMail("default", p.Name, "验证码", true, []byte("验证码： "+code)); e != nil {
+		// 	c.FailJson(500, e.Error())
+		// 	return
+		// }
+		c.SuccessJson("ok")
+		return
+	}
 }

@@ -39,10 +39,10 @@ func HideEmail(email string) string {
 	ln := len(name)
 	if ln == 1 {
 		return fmt.Sprintf("%s****%s", name, host)
-	} else if ln > 4 {
-		return fmt.Sprintf("%s****%s%s", name[:3], name[3:], host)
+	} else if ln > 5 {
+		return fmt.Sprintf("%s****%s%s", name[:3], name[ln-3:], host)
 	} else {
-		return fmt.Sprintf("%s****%s%s", name[:ln-1], name[ln-1:], host)
+		return fmt.Sprintf("%s****%s%s", name[:ln-2], host)
 	}
 
 }

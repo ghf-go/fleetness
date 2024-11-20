@@ -24,7 +24,7 @@ mq:
 log:
   driver: file
   dirpath:
-stmp:
+smtp:
   default:
     host:
     username:

@@ -1,8 +1,10 @@
 package comment
 
 import (
+	"github.com/ghf-go/fleetness/account"
 	"github.com/ghf-go/fleetness/comment/model"
 	"github.com/ghf-go/fleetness/core"
+	"github.com/ghf-go/fleetness/core/utils"
 	"gorm.io/gorm"
 )
 
@@ -73,9 +75,6 @@ func commentListAction(c *core.GContent) {
 	} else {
 		db.Where("target_type=? AND target_id=? AND reply_id=? AND (status=10 OR (status<>100 AND user_id=?))", req.TargetType, req.TargetId, req.ReplyID, c.GetUserID()).Find(&clist)
 	}
-	uids := []uint64{}
-	for _, item := range clist {
-		uids = append(uids, item.UserID)
-	}
-	c.SuccessJson(clist)
+
+	c.SuccessJson(account.AppendUserBase(c, utils.ModelList2Map(clist), "user_id", "uinfo"))
 }
