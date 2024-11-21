@@ -1,4 +1,4 @@
-package order
+package notify
 
 import (
 	"github.com/ghf-go/fleetness/core"
