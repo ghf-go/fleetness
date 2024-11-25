@@ -19,7 +19,7 @@ func SetCacheConName(name string) {
 }
 
 func getDB(c *core.GContent) *gorm.DB {
-	return c.GetDB(dbConName).Debug()
+	return c.GetDB(dbConName)
 }
 func getCache(c *core.GContent) *redis.Client {
 	return c.GetCache(cacheConName)

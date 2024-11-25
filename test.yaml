@@ -1,5 +1,6 @@
 app:
   port: 9001
+  debug: false
 dbs:
   default:
     max_idle_cons: 5

@@ -116,6 +116,11 @@ func (c *GContent) Next() {
 
 }
 
+// 是否开启DEBUG 日志输出模式
+func (c *GContent) IsDebug() bool {
+	return c.confData.App.Debug
+}
+
 // 获取数据库
 func (c *GContent) GetDB(dbname ...string) *gorm.DB {
 	conName := "default"
@@ -138,6 +143,9 @@ func (c *GContent) GetDB(dbname ...string) *gorm.DB {
 			Sources:  []gorm.Dialector{mysql.Open(dbconf.Write)},
 			Replicas: rs,
 		}).SetMaxIdleConns(dbconf.ConMaxIdleTime).SetMaxOpenConns(dbconf.MaxOpenCons).SetConnMaxIdleTime(time.Minute * time.Duration(dbconf.ConMaxIdleTime)).SetConnMaxLifetime(time.Minute * time.Duration(dbconf.ConMaxLifeTime)))
+		if c.confData.App.Debug {
+			db = db.Debug()
+		}
 		dbCon[conName] = db
 		return db
 	} else {

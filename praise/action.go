@@ -29,7 +29,7 @@ func praiseAction(c *core.GContent) {
 			"is_my": true,
 		})
 	} else {
-		tx := db.Begin().Debug()
+		tx := db.Begin()
 		if tx.Create(&model.Praise{
 			UserID:     c.GetUserID(),
 			TargetType: req.TargetType,
