@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/ghf-go/fleetness/account"
+	"github.com/ghf-go/fleetness/blocklist"
 	"github.com/ghf-go/fleetness/comment"
 	"github.com/ghf-go/fleetness/core"
 	"github.com/ghf-go/fleetness/core/session"
@@ -12,6 +13,7 @@ import (
 	"github.com/ghf-go/fleetness/feedback"
 	"github.com/ghf-go/fleetness/follow"
 	"github.com/ghf-go/fleetness/group"
+	"github.com/ghf-go/fleetness/message"
 	"github.com/ghf-go/fleetness/praise"
 	"github.com/ghf-go/fleetness/signin"
 )
@@ -40,6 +42,8 @@ func main() {
 		fmt.Printf(" uid: %d sd: %d cd :%d\n", uid, sumday, contineday)
 	})
 	signin.Init(apigrp, admingrp, nil)
+	message.Init(apigrp, admingrp, nil)
+	blocklist.Init(apigrp, admingrp, nil)
 
 	ge.Run()
 }
