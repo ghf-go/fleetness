@@ -59,7 +59,7 @@ func apiUserListAction(c *core.GContent) {
 		return
 	}
 	blist := []model.Blocklist{}
-	getDB(c).Where("user_id=? AND target_type=0", c.GetUserID()).Order("id DESC").Offset(p.GetOffset()).Limit(p.GetPageSize()).Find(&blist)
+	getDB(c).Where("user_id=? AND target_type=?", c.GetUserID(), TYPE_USER).Order("id DESC").Offset(p.GetOffset()).Limit(p.GetPageSize()).Find(&blist)
 	ret := []map[string]any{}
 	for _, item := range blist {
 		ret = append(ret, map[string]any{
