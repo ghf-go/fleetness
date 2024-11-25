@@ -256,6 +256,18 @@ func (c *GContent) GetContext() context.Context {
 	return c.ctx
 }
 
+// 处理事务
+func (c *GContent) Tx(db *gorm.DB, call func(tx *gorm.DB) (error, any)) (error, any) {
+	tx := db.Begin()
+	e, ret := call(tx)
+	if e != nil {
+		tx.Rollback()
+		return e, ret
+	}
+	tx.Commit()
+	return e, ret
+}
+
 // 通过本机发送邮件
 func (c *GContent) SendLocalMail(conname, to, subject string, isHtml bool, msg []byte) error {
 	i := strings.Index(to, "@")

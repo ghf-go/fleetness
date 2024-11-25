@@ -8,7 +8,7 @@ CREATE TABLE `t_follow` (
     `update_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
     `update_ip` VARCHAR(20) NOT NULL DEFAULT '' COMMENT '更新IP',
     PRIMARY KEY (`id`),
-    KEY `idx_user_id`( `user_id`),
+    UNIQUE KEY `uniq_user_id`( `user_id`),
     KEY `idx_create` (`create_at`),
     KEY `idx_update` (`update_at`)
 ) ENGINE = innodb DEFAULT CHARSET = utf8mb4 COMMENT = '关注表';

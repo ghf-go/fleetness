@@ -24,3 +24,11 @@ func getDB(c *core.GContent) *gorm.DB {
 func getCache(c *core.GContent) *redis.Client {
 	return c.GetCache(cacheConName)
 }
+
+func Init(api, admin, command *core.WebRouter) {
+	g := api.Group("follow", nil, core.ApiCheckoutLoginMiddleWare)
+	g.Post("follow", apiFollowAction)
+	g.Post("unfollow", apiUnFollowAction)
+	g.Post("follows", apiFollowListAction)
+	g.Post("fans", apiFollowFanAction)
+}
