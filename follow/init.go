@@ -9,6 +9,7 @@ import (
 var (
 	dbConName    = "default"
 	cacheConName = "default"
+	isOnline     = false
 )
 
 func SetDbConName(name string) {
@@ -26,6 +27,7 @@ func getCache(c *core.GContent) *redis.Client {
 }
 
 func Init(api, admin, command *core.WebRouter) {
+	isOnline = true
 	g := api.Group("follow", nil, core.ApiCheckoutLoginMiddleWare)
 	g.Post("follow", apiFollowAction)
 	g.Post("unfollow", apiUnFollowAction)

@@ -9,6 +9,7 @@ import (
 var (
 	dbConName    = "default"
 	cacheConName = "default"
+	isOnline     = false
 )
 
 func SetDbConName(name string) {
@@ -26,6 +27,7 @@ func getCahce(c *core.GContent) *redis.Client {
 }
 
 func Init(api, admin, command *core.WebRouter) {
+	isOnline = true
 	g := api.Group("favorites", nil, core.ApiCheckoutLoginMiddleWare)
 	g.Post("favorite", favoriteAction)
 	g.Post("unfavorite", unFavoriteAction)

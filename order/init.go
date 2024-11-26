@@ -9,6 +9,7 @@ import (
 var (
 	dbConName    = "default"
 	cacheConName = "default"
+	isOnline     = false
 )
 
 const (

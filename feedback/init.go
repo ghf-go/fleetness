@@ -7,6 +7,7 @@ import (
 
 var (
 	dbConName = "default"
+	isOnline  = false
 )
 
 func SetDbConName(name string) {
@@ -16,6 +17,7 @@ func getDB(c *core.GContent) *gorm.DB {
 	return c.GetDB(dbConName)
 }
 func Init(api, admin, command *core.WebRouter) {
+	isOnline = true
 	g := api.Group("feedback", nil, core.ApiCheckoutLoginMiddleWare)
 	g.Post("list", apiFeedBackListAction)
 	g.Post("send", apiFeedBackSendAction)

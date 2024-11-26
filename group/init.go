@@ -9,6 +9,7 @@ import (
 var (
 	dbConName    = "default"
 	cacheConName = "default"
+	isOnline     = false
 )
 
 func SetDbConName(name string) {
@@ -26,6 +27,7 @@ func getCache(c *core.GContent) *redis.Client {
 }
 
 func Init(api, admin, command *core.WebRouter) {
+	isOnline = true
 	g := api.Group("group", nil, core.ApiCheckoutLoginMiddleWare)
 	g.Post("save", apiGroupSaveAction)          //保存分组
 	g.Post("del", apiGroupDelAction)            //删除分组

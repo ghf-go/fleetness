@@ -9,6 +9,7 @@ import (
 var (
 	dbConName    = "default"
 	cacheConName = "default"
+	isOnline     = false
 	days         = 7
 	callHandle   func(uid uint64, sumday, contineday uint)
 )
@@ -32,6 +33,7 @@ func getCache(c *core.GContent) *redis.Client {
 }
 
 func Init(api, admin, command *core.WebRouter) {
+	isOnline = true
 	g := api.Group("signin", nil, core.ApiCheckoutLoginMiddleWare)
 	g.Post("info", apiSignInfoAction) //签到信息
 	g.Post("sign", apiSignAction)     //签到
