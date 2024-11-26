@@ -13,6 +13,7 @@ import (
 	"github.com/ghf-go/fleetness/feedback"
 	"github.com/ghf-go/fleetness/follow"
 	"github.com/ghf-go/fleetness/group"
+	"github.com/ghf-go/fleetness/lottery"
 	"github.com/ghf-go/fleetness/message"
 	"github.com/ghf-go/fleetness/praise"
 	"github.com/ghf-go/fleetness/signin"
@@ -44,6 +45,7 @@ func main() {
 	signin.Init(apigrp, admingrp, nil)
 	message.Init(apigrp, admingrp, nil)
 	blocklist.Init(apigrp, admingrp, nil)
+	lottery.Init(apigrp, admingrp, nil)
 
 	ge.Run()
 }
