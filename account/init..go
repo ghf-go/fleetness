@@ -13,6 +13,9 @@ var (
 )
 
 const (
+	CASH_SCORE  = "score"
+	CASH_AMOUNT = "amount"
+
 	TYPE_MOBILE = 1
 	TYPE_EMAIL  = 2
 	TYPE_WECHAT = 3
@@ -46,4 +49,5 @@ func Init(api, admin, command *core.WebRouter) {
 	g.Post("info", getUserInfoAction)
 	g.Post("bind", bindAccountAction)
 	g.Post("send_code", sendCodeAction)
+	g.Post("cash_log", apiCashLogAction)
 }

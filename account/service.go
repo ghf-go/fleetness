@@ -1,8 +1,11 @@
 package account
 
 import (
+	"errors"
+
 	"github.com/ghf-go/fleetness/account/model"
 	"github.com/ghf-go/fleetness/core"
+	"gorm.io/gorm"
 )
 
 // 获取账号信息列表
@@ -48,5 +51,31 @@ func AppendUserBase(c *core.GContent, data []map[string]any, uidkey, outkey stri
 
 	}
 	return data
+}
 
+// 添加用户金额记录
+func UserCashLog(c *core.GContent, uid uint64, cashType string, amount int, msg string) error {
+	e, _ := c.Tx(getDB(c), func(tx *gorm.DB) (error, any) {
+		if tx.Model(&model.UserCash{}).Where("user_id=? AND ukey=?", uid, cashType).Update("val", gorm.Expr("val + ?", amount)).RowsAffected == 0 && tx.Save(&model.UserCash{
+			CreateIP: c.GetIP(),
+			UpdateIP: c.GetIP(),
+			UserID:   uid,
+			Ukey:     cashType,
+			Val:      amount,
+		}).Error != nil {
+			return errors.New("更新失败"), ""
+		}
+		if tx.Save(&model.UserCashLog{
+			CreateIP: c.GetIP(),
+			UpdateIP: c.GetIP(),
+			UserID:   uid,
+			Ukey:     cashType,
+			Val:      amount,
+			Content:  msg,
+		}).Error != nil {
+			return errors.New("更新失败"), ""
+		}
+		return nil, ""
+	})
+	return e
 }

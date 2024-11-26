@@ -4,6 +4,7 @@ import (
 	"math/rand"
 	"time"
 
+	"github.com/ghf-go/fleetness/account"
 	"github.com/ghf-go/fleetness/core"
 	"github.com/ghf-go/fleetness/lottery/model"
 )
@@ -105,6 +106,7 @@ func apiLotteryAction(c *core.GContent) {
 		ItemID:    okid,
 		Day:       &ctime,
 	})
+	account.UserCashLog(c, uid, account.CASH_SCORE, 100, "抽奖")
 	for _, item := range itemList {
 		if item.ID == okid {
 			c.SuccessJson(map[string]any{

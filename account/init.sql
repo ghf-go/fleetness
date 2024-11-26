@@ -47,3 +47,34 @@ CREATE TABLE `t_user_info` (
     KEY `idx_create` (`create_at`),
     KEY `idx_update` (`update_at`)
 ) ENGINE = innodb DEFAULT CHARSET = utf8mb4 COMMENT = '用户信息表';
+
+CREATE TABLE `t_user_cash` (
+    `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+    `user_id` BIGINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '用户ID',
+    `ukey` VARCHAR(50) NOT NULL DEFAULT '' COMMENT 'key',
+    `val` INT NOT NULL DEFAULT 0 COMMENT 'val',
+    `create_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `create_ip` VARCHAR(20) NOT NULL DEFAULT '' COMMENT '创建IP',
+    `update_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    `update_ip` VARCHAR(20) NOT NULL DEFAULT '' COMMENT '更新IP',
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `uniq_uid_key` (`user_id`, `ukey`),
+    KEY `idx_create` (`create_at`),
+    KEY `idx_update` (`update_at`)
+) ENGINE = innodb DEFAULT CHARSET = utf8mb4 COMMENT = '用户资金表';
+
+CREATE TABLE `t_user_cash_log` (
+    `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+    `user_id` BIGINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '用户ID',
+    `ukey` VARCHAR(50) NOT NULL DEFAULT '' COMMENT 'key',
+    `val` INT NOT NULL DEFAULT 0 COMMENT 'val',
+    `content` VARCHAR(100) NOT NULL DEFAULT '' COMMENT '描述',
+    `create_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `create_ip` VARCHAR(20) NOT NULL DEFAULT '' COMMENT '创建IP',
+    `update_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    `update_ip` VARCHAR(20) NOT NULL DEFAULT '' COMMENT '更新IP',
+    PRIMARY KEY (`id`),
+    key `idx_user_key`(`user_id`,`ukey`),
+    KEY `idx_create` (`create_at`),
+    KEY `idx_update` (`update_at`)
+) ENGINE = innodb DEFAULT CHARSET = utf8mb4 COMMENT = '用户资金日志表';

@@ -259,3 +259,46 @@ func sendCodeAction(c *core.GContent) {
 		return
 	}
 }
+
+type apiCashLogActionParam struct {
+	CashType string `json:"type"`
+	core.PageParam
+}
+
+// 资金日志
+func apiCashLogAction(c *core.GContent) {
+	p := &apiCashLogActionParam{}
+	if e := c.BindJson(p); e != nil {
+		c.FailJson(403, "参数错误")
+		return
+	}
+	slist := []model.UserCash{}
+	uid := c.GetUserID()
+	db := getDB(c)
+	db.Find(&slist, "user_id=?", uid)
+	ret := map[string]any{}
+
+	for _, item := range slist {
+		ret[item.Ukey] = item.Val
+	}
+	llist := []model.UserCashLog{}
+	if p.CashType == "" {
+		db.Where("user_id=?", uid).Order("id DESC").Offset(p.GetOffset()).Limit(p.PageSize).Find(&llist)
+	} else {
+		db.Where("user_id=? AND ukey=?", uid, p.CashType).Order("id DESC").Offset(p.GetOffset()).Limit(p.PageSize).Find(&llist)
+	}
+
+	logs := []map[string]any{}
+	for _, item := range llist {
+		logs = append(logs, map[string]any{
+			"key":       item.Ukey,
+			"val":       item.Val,
+			"content":   item.Content,
+			"create_at": item.CreateAt,
+		})
+	}
+
+	ret["list"] = logs
+
+	c.SuccessJson(ret)
+}
