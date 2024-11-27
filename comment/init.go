@@ -36,6 +36,9 @@ func Init(api, admin, command *core.WebRouter) {
 	g := api.Group("comment", nil)
 	g.Post("list", commentListAction)
 	g.Post("comment", commentAction)
-	// g.Post("favorite", favoriteAction)
-	// g.Post("unfavorite", unFavoriteAction)
+
+	adg := admin.Group("comment", nil)
+	adg.Post("list", adminListAction)
+	adg.Post("wait_audit", adminWaitAuditListAction)
+	adg.Post("audit", adminAuditAction)
 }
