@@ -7,6 +7,9 @@ import (
 
 // 获取关注列表
 func Follows(c *core.GContent, uid uint64) []uint64 {
+	if !isOnline {
+		return []uint64{}
+	}
 	ulist := []model.FollowItem{}
 	ret := []uint64{}
 	getDB(c).Where("user_id=?", uid).Find(&ulist)
@@ -16,6 +19,9 @@ func Follows(c *core.GContent, uid uint64) []uint64 {
 	return ret
 }
 func IsFollow(c *core.GContent, uid, targetID uint64) bool {
+	if !isOnline {
+		return false
+	}
 	m := &model.FollowItem{}
 	getDB(c).First(m, "user_id=? AND target_id=?", uid, targetID)
 	return m.ID > 0
@@ -23,6 +29,9 @@ func IsFollow(c *core.GContent, uid, targetID uint64) bool {
 
 // 追加是否已经关注
 func AppendUserIsFollows(c *core.GContent, data []map[string]any, uidkey, outkey string) []map[string]any {
+	if !isOnline {
+		return data
+	}
 	uids := []uint64{}
 	for _, item := range data {
 		if id, ok := item[uidkey]; ok {

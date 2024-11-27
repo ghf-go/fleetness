@@ -12,6 +12,12 @@ var (
 	isOnline     = false
 )
 
+const (
+	FEED_TYPE_BLOG  = 0
+	FEED_TYPE_VOTE  = 10
+	FEED_TYPE_MVOTE = 20
+)
+
 func SetDbConName(name string) {
 	dbConName = name
 }
@@ -31,6 +37,7 @@ func Init(api, admin, command *core.WebRouter) {
 	ag := api.Group("feed", nil, core.ApiCheckoutLoginMiddleWare)
 	ag.Post("create", apiFeedCreateAction)
 	ag.Post("list", apiFeedListAction)
+	ag.Post("vote", apiFeedVoteAction)
 
 	adg := admin.Group("feed", nil, core.ApiCheckoutLoginMiddleWare)
 	adg.Post("list", adminFeedListAction)

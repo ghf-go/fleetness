@@ -18,3 +18,14 @@ func InBlockList(c *core.GContent, targetID uint64) bool {
 	getDB(c).First(m, "user_id=? AND target_type=? AND target_id=?", targetID, TYPE_USER, c.GetUserID())
 	return m.ID > 0
 }
+
+// 获取黑名单成员
+func BlockList(c *core.GContent, uid uint64) []uint64 {
+	ulist := []model.Blocklist{}
+	ret := []uint64{}
+	getDB(c).Where("user_id=?", uid).Find(&ulist)
+	for _, item := range ulist {
+		ret = append(ret, item.TargetID)
+	}
+	return ret
+}

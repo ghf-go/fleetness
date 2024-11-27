@@ -14,6 +14,19 @@ var (
 	cacheCon   = map[string]*redis.Client{}
 )
 
+const (
+	//审核状态
+	STATUS_WAIT_AUDIT = 0
+	STATUS_SUCCESS    = 10
+	STATUS_MY         = 20
+	STATUS_DEL        = 100
+
+	//目标类型
+	TARGET_TYPE_USER    = 1
+	TARGET_TYPE_FEED    = 2
+	TARGET_TYPE_COMMENT = 3
+)
+
 // 记录系统日志
 func AppDebug(flayout string, arg ...any) {
 	if isAppDebug {
