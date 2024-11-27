@@ -74,6 +74,10 @@ func AppendFavoriteInfo(c *core.GContent, targetType uint, data []map[string]any
 				ret[item.TargetID] = map[string]any{
 					"count": item.TargetCounts,
 					"is_my": false,
+					"param": map[string]any{
+						"target_type": targetType,
+						"target_id":   item.TargetID,
+					},
 				}
 			}
 		}
@@ -85,6 +89,10 @@ func AppendFavoriteInfo(c *core.GContent, targetType uint, data []map[string]any
 				ret[item.TargetID] = map[string]any{
 					"count": 0,
 					"is_my": false,
+					"param": map[string]any{
+						"target_type": targetType,
+						"target_id":   item.TargetID,
+					},
 				}
 			}
 		}
@@ -98,6 +106,10 @@ func AppendFavoriteInfo(c *core.GContent, targetType uint, data []map[string]any
 				item[outkey] = map[string]any{
 					"count": 0,
 					"is_my": false,
+					"param": map[string]any{
+						"target_type": targetType,
+						"target_id":   id,
+					},
 				}
 			}
 		}
