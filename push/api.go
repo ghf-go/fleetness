@@ -22,6 +22,7 @@ func apiRegDeviceAction(c *core.GContent) {
 		c.FailJson(403, "参数错误")
 		return
 	}
+	// PushAllSse("asdf", "asdf")
 	dm := &model.AppDevice{}
 	getDB(c).First(dm, "channel=? AND token=?", p.Channel, p.Token)
 	if dm.ID == 0 {

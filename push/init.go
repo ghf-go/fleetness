@@ -34,9 +34,6 @@ func getCahce(c *core.GContent) *redis.Client {
 func Init(api, admin, command *core.WebRouter, ge *core.GEngine) {
 	isOnline = true
 	api.Post("regdevice", apiRegDeviceAction) //上报用户设备
-	// g := api.Group("signin", nil, core.ApiCheckoutLoginMiddleWare)
-	// g.Post("info", apiSignInfoAction) //签到信息
-	// g.Post("sign", apiSignAction)     //签到
 	ge.RouterAny("sse_notify", func(c *core.GContent) {
 		c.Sse(func(s *core.Sse) {
 			allSse[s.GetKey()] = s

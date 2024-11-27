@@ -7,6 +7,7 @@ import (
 	"github.com/ghf-go/fleetness/account"
 	"github.com/ghf-go/fleetness/blocklist"
 	"github.com/ghf-go/fleetness/comment"
+	"github.com/ghf-go/fleetness/config"
 	"github.com/ghf-go/fleetness/core"
 	"github.com/ghf-go/fleetness/core/session"
 	"github.com/ghf-go/fleetness/favorites"
@@ -50,6 +51,7 @@ func main() {
 	lottery.Init(apigrp, admingrp, nil)
 	feed.Init(apigrp, admingrp, nil)
 	push.Init(apigrp, admingrp, nil, ge)
+	config.Init(apigrp, admingrp, nil)
 
 	ge.Run()
 }
