@@ -37,7 +37,7 @@ func (ge *GEngine) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(204)
 		return
 	}
-	w.Header().Set("Access-Control-Allow-Origin", "*")
+	// w.Header().Set("Access-Control-Allow-Origin", "*")
 	AppDebug("请求接口 %s %s", r.URL.Path, r.URL.RawQuery)
 	isOk, hands := ge.webRouter.FindHandle(r.Method, r.URL.Path)
 	c := newWebGContent(ge.confData, w, r, hands)

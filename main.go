@@ -19,6 +19,7 @@ import (
 	"github.com/ghf-go/fleetness/message"
 	"github.com/ghf-go/fleetness/praise"
 	"github.com/ghf-go/fleetness/signin"
+	"github.com/gorilla/websocket"
 )
 
 //go:embed test.yaml
@@ -50,18 +51,32 @@ func main() {
 	lottery.Init(apigrp, admingrp, nil)
 	feed.Init(apigrp, admingrp, nil)
 
+	ge.RouterAny("w", func(c *core.GContent) {
+		c.WebSocket(func(con *websocket.Conn) {
+			for {
+				if e := con.WriteMessage(websocket.TextMessage, []byte("asdfasd")); e != nil {
+					fmt.Printf("写入数据失败 %s\n", e.Error())
+					return
+				}
+				time.Sleep(1 * time.Second)
+			}
+		})
+
+	})
 	ge.RouterAny("test", func(c *core.GContent) {
-		c.StartEvent()
-		for {
-			time.Sleep(1 * time.Second)
-			if c.Sse("test") != nil {
-				return
+		c.Sse(func(s *core.Sse) {
+			for {
+				time.Sleep(1 * time.Second)
+				if s.Send("test") != nil {
+					return
+				}
+				time.Sleep(1 * time.Second)
+				if s.Send("test", "aa") != nil {
+					return
+				}
 			}
-			time.Sleep(1 * time.Second)
-			if c.Sse("test", "aa") != nil {
-				return
-			}
-		}
+		})
+
 	})
 
 	ge.Run()

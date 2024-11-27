@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"log"
 	"net"
 	"net/http"
 	"net/smtp"
@@ -14,12 +15,19 @@ import (
 	"time"
 
 	"github.com/ghf-go/fleetness/core/conf"
+	"github.com/gorilla/websocket"
 	"github.com/redis/go-redis/v9"
 	uuid "github.com/satori/go.uuid"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/plugin/dbresolver"
 )
+
+var upgrader = websocket.Upgrader{
+	CheckOrigin: func(r *http.Request) bool {
+		return true
+	},
+}
 
 type GContent struct {
 	confData      *conf.Conf
@@ -221,8 +229,12 @@ func (c *GContent) json(code int, msg string, data any) {
 
 }
 
+func (c *GContent) flush() {
+	c.w.(http.Flusher).Flush()
+}
+
 // 开启Event事件
-func (c *GContent) StartEvent() {
+func (c *GContent) Sse(call func(s *Sse)) {
 	c.w.Header().Set("Content-Type", "text/event-stream")
 	// 这行代码设置 HTTP 响应的 Cache-Control 为 no-cache，告诉浏览器不要缓存此响应。
 	c.w.Header().Set("Cache-Control", "no-cache")
@@ -231,24 +243,40 @@ func (c *GContent) StartEvent() {
 	// 这行代码设置 HTTP 响应的自定义头部 X-Accel-Buffering 为 no，用于禁用某些代理或 Web 服务器（如 Nginx）的缓冲。这有助于确保服务器发送事件在传输过程中不会受到缓冲影响
 	c.w.Header().Set("X-Accel-Buffering", "no")
 	c.w.Header().Set("Access-Control-Allow-Origin", "*")
-	c.w.(http.Flusher).Flush()
+	c.flush()
+	call(&Sse{c: c})
 }
 
-// 发送event事件
-func (c *GContent) Sse(data string, event ...string) error {
-	if len(event) == 1 {
-		_, e := c.w.Write([]byte(fmt.Sprintf("event: %s\ndata: %s\n\n", data, event[0])))
-		if e == nil {
-			c.w.(http.Flusher).Flush()
-		}
-		return e
-	} else {
-		_, e := c.w.Write([]byte(fmt.Sprintf("data: %s\n\n", data)))
-		if e == nil {
-			c.w.(http.Flusher).Flush()
-		}
-		return e
+// 开始websocket
+func (c *GContent) WebSocket(call func(con *websocket.Conn)) {
+	conn, err := upgrader.Upgrade(c.w, c.r, nil)
+	if err != nil {
+		fmt.Printf("链接失败 %s\n", err.Error())
+		log.Println(err)
+		return
 	}
+	call(conn)
+	defer fmt.Printf("链接管理了\n")
+	defer conn.Close()
+
+	// if c.r.Header.Get("Upgrade") != "websocket" {
+	// 	return errors.New("协议错误")
+	// }
+	// if c.r.Header.Get("Sec-WebSocket-Version") != "13" {
+	// 	return errors.New("协议错误")
+	// }
+	// k := c.r.Header.Get("Sec-WebSocket-Key")
+	// if k == "" {
+	// 	return errors.New("协议错误")
+	// }
+	// c.w.WriteHeader(http.StatusSwitchingProtocols)
+	// c.w.Header().Set("Upgrade", "websocket")
+	// c.w.Header().Set("Sec-WebSocket-Version", "13")
+	// c.w.Header().Set("Connection", "Upgrade")
+	// dd := sha1.Sum([]byte(k + "258EAFA5-E914-47DA-95CA-C5AB0DC85B11"))
+	// c.w.Header().Set("Sec-WebSocket-Accept", base64.StdEncoding.EncodeToString(dd[:]))
+	// c.flush()
+	// return nil
 }
 
 // 显示模版
