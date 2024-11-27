@@ -3,6 +3,7 @@ package main
 import (
 	_ "embed"
 	"fmt"
+	"time"
 
 	"github.com/ghf-go/fleetness/account"
 	"github.com/ghf-go/fleetness/blocklist"
@@ -48,6 +49,20 @@ func main() {
 	blocklist.Init(apigrp, admingrp, nil)
 	lottery.Init(apigrp, admingrp, nil)
 	feed.Init(apigrp, admingrp, nil)
+
+	ge.RouterAny("test", func(c *core.GContent) {
+		c.StartEvent()
+		for {
+			time.Sleep(1 * time.Second)
+			if c.Sse("test") != nil {
+				return
+			}
+			time.Sleep(1 * time.Second)
+			if c.Sse("test", "aa") != nil {
+				return
+			}
+		}
+	})
 
 	ge.Run()
 }

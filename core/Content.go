@@ -221,6 +221,36 @@ func (c *GContent) json(code int, msg string, data any) {
 
 }
 
+// 开启Event事件
+func (c *GContent) StartEvent() {
+	c.w.Header().Set("Content-Type", "text/event-stream")
+	// 这行代码设置 HTTP 响应的 Cache-Control 为 no-cache，告诉浏览器不要缓存此响应。
+	c.w.Header().Set("Cache-Control", "no-cache")
+	// 这行代码设置 HTTP 响应的 Connection 为 keep-alive，保持长连接，以便服务器可以持续发送事件到客户端。
+	c.w.Header().Set("Connection", "keep-alive")
+	// 这行代码设置 HTTP 响应的自定义头部 X-Accel-Buffering 为 no，用于禁用某些代理或 Web 服务器（如 Nginx）的缓冲。这有助于确保服务器发送事件在传输过程中不会受到缓冲影响
+	c.w.Header().Set("X-Accel-Buffering", "no")
+	c.w.Header().Set("Access-Control-Allow-Origin", "*")
+	c.w.(http.Flusher).Flush()
+}
+
+// 发送event事件
+func (c *GContent) Sse(data string, event ...string) error {
+	if len(event) == 1 {
+		_, e := c.w.Write([]byte(fmt.Sprintf("event: %s\ndata: %s\n\n", data, event[0])))
+		if e == nil {
+			c.w.(http.Flusher).Flush()
+		}
+		return e
+	} else {
+		_, e := c.w.Write([]byte(fmt.Sprintf("data: %s\n\n", data)))
+		if e == nil {
+			c.w.(http.Flusher).Flush()
+		}
+		return e
+	}
+}
+
 // 显示模版
 func (c *GContent) Display() {}
 
