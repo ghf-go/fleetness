@@ -12,6 +12,9 @@ func SessionJwt(jwtkey string) core.Handle {
 	return func(c *core.GContent) {
 		// log.Debug(c, "jwt")
 		token := c.GetRequest().Header.Get("Token")
+		if token == "" {
+			token = c.GetRequest().URL.Query().Get("Token")
+		}
 		data := &jwt.RegisteredClaims{}
 		if token != "" {
 			t, e := jwt.ParseWithClaims(token, data, func(t *jwt.Token) (interface{}, error) {

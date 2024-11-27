@@ -244,7 +244,7 @@ func (c *GContent) Sse(call func(s *Sse)) {
 	c.w.Header().Set("X-Accel-Buffering", "no")
 	c.w.Header().Set("Access-Control-Allow-Origin", "*")
 	c.flush()
-	call(&Sse{c: c})
+	call(&Sse{c: c, isClose: false, key: c.ReqID})
 }
 
 // 开始websocket

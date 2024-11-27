@@ -1,0 +1,21 @@
+CREATE TABLE `t_app_device` (
+    `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+    `user_id` BIGINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '用户ID',
+    `platform` VARCHAR(20) NOT NULL DEFAULT '' COMMENT '平台',
+    `board` VARCHAR(20) NOT NULL DEFAULT '' COMMENT '品牌',
+    `channel` VARCHAR(20) NOT NULL DEFAULT '' COMMENT '推送通道',
+    `token` VARCHAR(120) NOT NULL DEFAULT '' COMMENT 'TOKEN',
+    `push_times` INT UNSIGNED NOT NULL DEFAULT 0 COMMENT '推送次数',
+    `os_ver` VARCHAR(20) NOT NULL DEFAULT '' COMMENT '系统版本',
+    `app_ver` VARCHAR(20) NOT NULL DEFAULT '' COMMENT 'app版本',
+    `wgt_ver` VARCHAR(20) NOT NULL DEFAULT '' COMMENT '热更新版本',
+    `create_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `create_ip` VARCHAR(20) NOT NULL DEFAULT '' COMMENT '创建IP',
+    `update_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    `update_ip` VARCHAR(20) NOT NULL DEFAULT '' COMMENT '更新IP',
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `uniq_channel_token` (`channel`, `token`),
+    KEY `idx_user_id`(`user_id`),
+    KEY `idx_create` (`create_at`),
+    KEY `idx_update` (`update_at`)
+) ENGINE = innodb DEFAULT CHARSET = utf8mb4 COMMENT = '用户设备信息表';

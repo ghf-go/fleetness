@@ -1,4 +1,4 @@
-package notify
+package push
 
 import (
 	"github.com/sideshow/apns2"
@@ -31,4 +31,32 @@ func AnpsDebug(notify *apns2.Notification) {
 		return
 	}
 	iosclient.Development().Push(notify)
+}
+
+// SSe 全量推送
+func PushAllSse(msg, event string) {
+	if !isOnline {
+		return
+	}
+	go func() {
+		for _, item := range allSse {
+			item.Send(msg, event)
+		}
+	}()
+}
+
+// 向用户发送 sse推送
+func PushAllSseUser(msg, event string, uids ...uint64) {
+	if !isOnline {
+		return
+	}
+	go func() {
+		for _, uid := range uids {
+			if r, ok := userSse[uid]; ok {
+				for _, s := range r {
+					s.Send(msg, event)
+				}
+			}
+		}
+	}()
 }
