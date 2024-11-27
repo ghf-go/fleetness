@@ -16,6 +16,7 @@ import (
 type GEngine struct {
 	webRouter *WebRouter //webRouter路径
 	confData  *conf.Conf
+	job       *job
 }
 
 func NewGengine(confdata []byte) *GEngine {
@@ -27,6 +28,7 @@ func NewGengine(confdata []byte) *GEngine {
 	return &GEngine{
 		webRouter: newRootRouter(),
 		confData:  conf,
+		job:       newJob(newWebGContent(conf, nil, nil, []Handle{})),
 	}
 }
 func (ge *GEngine) ServeHTTP(w http.ResponseWriter, r *http.Request) {
@@ -60,6 +62,7 @@ func (ge *GEngine) Run() {
 		Addr:    fmt.Sprintf(":%d", ge.confData.App.Port),
 		Handler: ge,
 	}
+	go ge.job.start()
 	go func() {
 		if e := hserver.ListenAndServe(); e != nil {
 			panic(e.Error())
@@ -73,16 +76,23 @@ func (ge *GEngine) Run() {
 	hserver.Shutdown(ct)
 }
 
-// 注册消息队列
-func (ge *GEngine) RegisterMq() {
-
-}
-
 // 注册web handle
 func (ge *GEngine) RegisterWebHandle() {}
 
-// 注册job
-func (ge *GEngine) RegisterJob() {}
+// 添加计划任务
+func (ge *GEngine) AddCronJob(name string, crontab string, handle Handle) {
+	ge.job.addCronJob(name, crontab, handle)
+}
+
+// 添加时间间隔的任务
+func (ge *GEngine) AddAfterJob(name string, second int, handle Handle) {
+	ge.job.addAfterJob(name, second, handle)
+}
+
+// 添加一直运行的JOB
+func (ge *GEngine) AddAlwaysJob(name string, handle Handle) {
+	ge.job.addAlwaysJob(name, handle)
+}
 
 // 注册Webvue
 func (ge *GEngine) RegisterVue() {}

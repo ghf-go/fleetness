@@ -60,6 +60,9 @@ func newWebGContent(confData *conf.Conf, w http.ResponseWriter, r *http.Request,
 
 // 获取客户端IP
 func (c *GContent) GetIP() string {
+	if c.r == nil {
+		return "127.0.0.1"
+	}
 	if c.reqIP == "" {
 		ret := c.r.Header.Get("ipv4")
 		if ret != "" {
@@ -114,6 +117,9 @@ func (c *GContent) Abort() {
 	c.isAbort = true
 }
 func (c *GContent) Next() {
+	if c.r == nil {
+		return
+	}
 	if c.currentNext < len(c.handles) {
 		ci := c.currentNext
 		c.currentNext++
@@ -191,6 +197,9 @@ func (c *GContent) GetCache(conname ...string) *redis.Client {
 
 // 绑定数据
 func (c *GContent) BindJson(obj any) error {
+	if c.r == nil {
+		return errors.New("计划任务不能解析参数")
+	}
 	body := c.r.Body
 	defer body.Close()
 	data, e := io.ReadAll(body)
@@ -199,9 +208,6 @@ func (c *GContent) BindJson(obj any) error {
 	}
 	return json.Unmarshal(data, obj)
 }
-
-// 发送队列
-func (c *GContent) SendMq() {}
 
 // 接口正常返回
 func (c *GContent) SuccessJson(data any) {
@@ -215,6 +221,9 @@ func (c *GContent) FailJson(code int, msg string) {
 
 // 输出JSON信息
 func (c *GContent) json(code int, msg string, data any) {
+	if c.r == nil {
+		return
+	}
 	c.w.Header().Set("content-type", "application/json;charset=utf8")
 	ret := map[string]any{
 		"code": code,
@@ -229,12 +238,19 @@ func (c *GContent) json(code int, msg string, data any) {
 
 }
 
+// 刷新缓存
 func (c *GContent) flush() {
+	if c.r == nil {
+		return
+	}
 	c.w.(http.Flusher).Flush()
 }
 
 // 开启Event事件
 func (c *GContent) Sse(call func(s *Sse)) {
+	if c.r == nil {
+		return
+	}
 	c.w.Header().Set("Content-Type", "text/event-stream")
 	// 这行代码设置 HTTP 响应的 Cache-Control 为 no-cache，告诉浏览器不要缓存此响应。
 	c.w.Header().Set("Cache-Control", "no-cache")
@@ -249,6 +265,9 @@ func (c *GContent) Sse(call func(s *Sse)) {
 
 // 开始websocket
 func (c *GContent) WebSocket(call func(con *websocket.Conn)) {
+	if c.r == nil {
+		return
+	}
 	conn, err := upgrader.Upgrade(c.w, c.r, nil)
 	if err != nil {
 		fmt.Printf("链接失败 %s\n", err.Error())
@@ -290,24 +309,43 @@ func (c *GContent) GetConf() *conf.Conf {
 	return c.confData
 }
 func (c *GContent) Flush() {
+	if c.r == nil {
+		AppDebug(" %s", string(c.responseBytes))
+		return
+	}
 	c.w.Write(c.responseBytes)
 }
 func (c *GContent) GetRequest() *http.Request {
+	if c.r == nil {
+		return nil
+	}
 	return c.r
 }
 func (c *GContent) GetResponseWriter() http.ResponseWriter {
+	if c.r == nil {
+		return nil
+	}
 	return c.w
 }
 func (c *GContent) SetUserID(uid string) {
+	if c.r == nil {
+		return
+	}
 	if id, e := strconv.ParseUint(uid, 10, 64); e == nil {
 		c.userId = id
 	}
 }
 
 func (c *GContent) GetUserID() uint64 {
+	if c.r == nil {
+		return 0
+	}
 	return c.userId
 }
 func (c *GContent) IsLogin() bool {
+	if c.r == nil {
+		return false
+	}
 	return c.userId > 0
 }
 func (c *GContent) GetContext() context.Context {

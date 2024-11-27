@@ -52,6 +52,22 @@ func main() {
 	feed.Init(apigrp, admingrp, nil)
 	push.Init(apigrp, admingrp, nil, ge)
 	config.Init(apigrp, admingrp, nil)
-
+	// ge.AddAfterJob("测试每个5秒运行一次", 5, func(c *core.GContent) {
+	// 	core.AppDebug("测试每个5秒运行一次")
+	// })
+	// ge.AddAlwaysJob("测试一直运行", func(c *core.GContent) {
+	// 	i := 0
+	// 	for {
+	// 		i++
+	// 		core.AppDebug("测试一直运行 %d", i)
+	// 		if i > 10 {
+	// 			panic("退出一次")
+	// 		}
+	// 		time.Sleep(time.Second)
+	// 	}
+	// })
+	// ge.AddCronJob("计划任务执行", "* * * * *", func(c *core.GContent) {
+	// 	core.AppDebug("计划任务执行")
+	// })
 	ge.Run()
 }
