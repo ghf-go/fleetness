@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/ghf-go/fleetness/account"
+	"github.com/ghf-go/fleetness/appver"
 	"github.com/ghf-go/fleetness/blocklist"
 	"github.com/ghf-go/fleetness/comment"
 	"github.com/ghf-go/fleetness/config"
@@ -27,6 +28,10 @@ import (
 var _confData []byte
 
 func main() {
+	// v1 := "1.1.3"
+	// v2 := "1.0.20"
+	// fmt.Printf("%s -> %s r: %v\n", v1, v2, utils.CheckVersion(v1, v2))
+	// return
 	ge := core.NewGengine(_confData)
 	apigrp := ge.RouterGroup("api", func(c *core.GContent) {
 		c.FailJson(404, "接口不存在")
@@ -54,6 +59,7 @@ func main() {
 	push.Init(apigrp, admingrp, nil, ge)
 	config.Init(apigrp, admingrp, nil)
 	metrics.Init(apigrp, admingrp, nil)
+	appver.Init(apigrp, admingrp, nil)
 	// ge.AddAfterJob("测试每个5秒运行一次", 5, func(c *core.GContent) {
 	// 	core.AppDebug("测试每个5秒运行一次")
 	// })
