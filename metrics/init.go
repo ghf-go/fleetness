@@ -32,4 +32,8 @@ func Init(api, admin, command *core.WebRouter) {
 	ag.Post("upload", apiUploadAction)
 	ag.Post("time", apiTimeSyncAction)
 
+	adg := admin.Group("metrics", nil)
+	adg.Post("keys", adminKeyListAction)
+	adg.Post("stat", adminStatAction)
+
 }
