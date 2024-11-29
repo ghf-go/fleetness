@@ -41,7 +41,7 @@ func passwd(pass, sign string) string {
 }
 
 func Init(api, admin, command *core.WebRouter) {
-	g := api.Group("account", nil)
+	g := api.Group("account")
 	g.Post("login", loginByPassAction)
 	g.Post("register", registerAction)
 	g.Post("changepass", changePassAction)

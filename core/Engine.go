@@ -115,6 +115,6 @@ func (ge *GEngine) RouterDelete(path string, hand Handle, args ...Handle) {
 func (ge *GEngine) RouterPut(path string, hand Handle, args ...Handle) {
 	ge.webRouter.Post(path, hand, args...)
 }
-func (ge *GEngine) RouterGroup(path string, err404 Handle, args ...Handle) *WebRouter {
-	return ge.webRouter.Group(path, err404, args...)
+func (ge *GEngine) RouterGroup(path string, args ...Handle) *WebRouter {
+	return ge.webRouter.Group(path, args...)
 }

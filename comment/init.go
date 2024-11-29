@@ -33,11 +33,11 @@ func getCahce(c *core.GContent) *redis.Client {
 
 func Init(api, admin, command *core.WebRouter) {
 	isOnline = true
-	g := api.Group("comment", nil)
+	g := api.Group("comment")
 	g.Post("list", commentListAction)
 	g.Post("comment", commentAction)
 
-	adg := admin.Group("comment", nil)
+	adg := admin.Group("comment")
 	adg.Post("list", adminListAction)
 	adg.Post("wait_audit", adminWaitAuditListAction)
 	adg.Post("audit", adminAuditAction)

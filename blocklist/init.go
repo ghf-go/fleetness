@@ -30,7 +30,7 @@ func IsOnline() bool {
 }
 func Init(api, admin, command *core.WebRouter) {
 	isOnline = true
-	g := api.Group("blocklist", nil, core.ApiCheckoutLoginMiddleWare)
+	g := api.Group("blocklist", core.ApiCheckoutLoginMiddleWare)
 	g.Post("add", apiAddAction)
 	g.Post("del", apiDelAction)
 	g.Post("list", apiUserListAction)

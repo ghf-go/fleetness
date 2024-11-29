@@ -18,10 +18,10 @@ func getDB(c *core.GContent) *gorm.DB {
 }
 func Init(api, admin, command *core.WebRouter) {
 	isOnline = true
-	g := api.Group("feedback", nil, core.ApiCheckoutLoginMiddleWare)
+	g := api.Group("feedback", core.ApiCheckoutLoginMiddleWare)
 	g.Post("list", apiFeedBackListAction)
 	g.Post("send", apiFeedBackSendAction)
-	a := admin.Group("feedback", nil, core.ApiCheckoutLoginMiddleWare)
+	a := admin.Group("feedback", core.ApiCheckoutLoginMiddleWare)
 	a.Post("send", adminFeedBackReplayAction)
 	a.Post("list", adminFeedListAction)
 }

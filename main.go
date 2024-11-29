@@ -36,13 +36,9 @@ func main() {
 	// fmt.Printf("%s -> %s r: %v\n", v1, v2, utils.CheckVersion(v1, v2))
 	// return
 	ge := core.NewGengine(_confData)
-	apigrp := ge.RouterGroup("api", func(c *core.GContent) {
-		c.FailJson(404, "接口不存在")
-	}, session.SessionJwt("1234567890123456", 8640000))
+	apigrp := ge.RouterGroup("api", session.SessionJwt("1234567890123456", 8640000))
 
-	admingrp := ge.RouterGroup("admin", func(c *core.GContent) {
-		c.FailJson(404, "接口不存在")
-	}, session.SessionJwt("1234567890123456", 1800))
+	admingrp := ge.RouterGroup("admin", session.SessionJwt("1234567890123456", 1800))
 
 	praise.Init(apigrp, admingrp, nil)
 	favorites.Init(apigrp, admingrp, nil)

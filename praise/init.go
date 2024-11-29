@@ -28,7 +28,7 @@ func getCache(c *core.GContent) *redis.Client {
 
 func Init(api, admin, command *core.WebRouter) {
 	isOnline = true
-	g := api.Group("praise", nil, core.ApiCheckoutLoginMiddleWare)
+	g := api.Group("praise", core.ApiCheckoutLoginMiddleWare)
 	g.Post("praise", praiseAction)
 	g.Post("unpraise", unPraiseAction)
 }

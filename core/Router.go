@@ -27,19 +27,19 @@ func newRootRouter(args ...Handle) *WebRouter {
 	}
 }
 
-func (r *WebRouter) Group(path string, err404 Handle, args ...Handle) *WebRouter {
+func (r *WebRouter) Error404(err404 Handle) {
+	r.err404 = err404
+}
+func (r *WebRouter) Group(path string, args ...Handle) *WebRouter {
 	for strings.HasPrefix(path, "/") {
 		path = path[1:]
-	}
-	if err404 == nil {
-		err404 = r.err404
 	}
 	path = strings.ToLower(path)
 	nr := &WebRouter{
 		groups:     map[string]*WebRouter{},
 		methods:    map[string][]Handle{},
 		middlefunc: append(r.middlefunc, args...),
-		err404:     err404,
+		err404:     r.err404,
 	}
 	r.groups[path] = nr
 	return nr
