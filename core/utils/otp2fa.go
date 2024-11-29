@@ -13,6 +13,7 @@ type otp2Fa struct {
 	secret string
 }
 
+// otpauth://totp/GitHub:eoe2005?secret=16bit&issuer=GitHub
 // 验证
 func VerifyOtp2Fa(secret, code string) bool {
 

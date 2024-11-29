@@ -28,6 +28,9 @@ import (
 var _confData []byte
 
 func main() {
+	// fmt.Println(utils.VerifyOtp2Fa("3K3WIFWX7BENFKZO", "569070"))
+	// fmt.Println(utils.VerifyOtp2Fa("WWNEB6NOT3MDVGRW", "675674"))
+	// return
 	// v1 := "1.1.3"
 	// v2 := "1.0.20"
 	// fmt.Printf("%s -> %s r: %v\n", v1, v2, utils.CheckVersion(v1, v2))
@@ -35,11 +38,11 @@ func main() {
 	ge := core.NewGengine(_confData)
 	apigrp := ge.RouterGroup("api", func(c *core.GContent) {
 		c.FailJson(404, "接口不存在")
-	}, session.SessionJwt("1234567890123456"))
+	}, session.SessionJwt("1234567890123456", 8640000))
 
 	admingrp := ge.RouterGroup("admin", func(c *core.GContent) {
 		c.FailJson(404, "接口不存在")
-	}, session.SessionJwt("1234567890123456"))
+	}, session.SessionJwt("1234567890123456", 1800))
 
 	praise.Init(apigrp, admingrp, nil)
 	favorites.Init(apigrp, admingrp, nil)

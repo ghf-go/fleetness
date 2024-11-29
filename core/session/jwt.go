@@ -2,12 +2,16 @@ package session
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/ghf-go/fleetness/core"
 	"github.com/golang-jwt/jwt/v5"
 )
 
-func SessionJwt(jwtkey string) core.Handle {
+func SessionJwt(jwtkey string, expire int) core.Handle {
+	if expire == 0 {
+		expire = 1800
+	}
 	jwtSignKey := []byte(jwtkey)
 	return func(c *core.GContent) {
 		// log.Debug(c, "jwt")
@@ -20,7 +24,7 @@ func SessionJwt(jwtkey string) core.Handle {
 			t, e := jwt.ParseWithClaims(token, data, func(t *jwt.Token) (interface{}, error) {
 				return jwtSignKey, nil
 			})
-			if e == nil && t.Valid {
+			if e == nil && t.Valid { // && data.ExpiresAt != nil && data.ExpiresAt.Sub(time.Now()) > 0 {
 				c.SetUserID(data.ID)
 			}
 
@@ -29,6 +33,7 @@ func SessionJwt(jwtkey string) core.Handle {
 		if c.IsLogin() {
 			// log.Debug(c, "jwt login")
 			data.ID = fmt.Sprintf("%d", c.GetUserID())
+			data.ExpiresAt = jwt.NewNumericDate(time.Now().Add(time.Second * time.Duration(expire)))
 			t := jwt.NewWithClaims(jwt.SigningMethodHS256, data)
 			sendToken, e := t.SignedString(jwtSignKey)
 			if e == nil {

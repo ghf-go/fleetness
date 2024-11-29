@@ -65,5 +65,5 @@ func Init(api, admin, command *core.WebRouter, ge *core.GEngine) {
 			}
 
 		})
-	}, session.SessionJwt("1234567890123456"))
+	}, session.SessionJwt("1234567890123456", 1800))
 }
