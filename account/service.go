@@ -79,3 +79,27 @@ func UserCashLog(c *core.GContent, uid uint64, cashType string, amount int, msg 
 	})
 	return e
 }
+
+// 获取收货地址信息
+func GetUserAddr(c *core.GContent, uid uint64, addrids ...uint64) map[string]any {
+	aid := uint64(0)
+	if len(addrids) > 0 {
+		aid = addrids[0]
+	}
+	row := &model.UserAddr{}
+	if aid > 0 {
+		getDB(c).First(row, aid)
+		if row.ID > 0 && row.UserID == uid {
+			return formatUserAddr(row)
+		}
+	}
+	getDB(c).First(row, "user_id=? AND is_default=1", uid)
+	if row.ID > 0 {
+		return formatUserAddr(row)
+	}
+	getDB(c).First(row, "user_id=?", uid)
+	if row.ID > 0 {
+		return formatUserAddr(row)
+	}
+	return nil
+}

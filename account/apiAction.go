@@ -314,16 +314,7 @@ func apiUserAddrListAction(c *core.GContent) {
 	getDB(c).Where("user_id=?", c.GetUserID()).Offset(p.GetOffset()).Limit(p.GetPageSize()).Order("is_default DESC").Find(&list)
 	ret := []map[string]any{}
 	for _, item := range list {
-		ret = append(ret, map[string]any{
-			"id":         item.ID,
-			"mobile":     item.Mobile,
-			"consignee":  item.Consignee,
-			"province":   item.Province,
-			"city":       item.City,
-			"district":   item.District,
-			"address":    item.Address,
-			"is_default": item.IsDefault,
-		})
+		ret = append(ret, formatUserAddr(&item))
 	}
 	c.SuccessJson(ret)
 }
