@@ -78,3 +78,22 @@ CREATE TABLE `t_user_cash_log` (
     KEY `idx_create` (`create_at`),
     KEY `idx_update` (`update_at`)
 ) ENGINE = innodb DEFAULT CHARSET = utf8mb4 COMMENT = '用户资金日志表';
+
+
+CREATE TABLE `t_admin_user` (
+    `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+    `login_name` VARCHAR(30) NOT NULL DEFAULT '' COMMENT '登录名称',
+    `nick_name` VARCHAR(30) NOT NULL DEFAULT '' COMMENT '昵称',
+    `passwd` VARCHAR(32) NOT NULL DEFAULT '' COMMENT '密码',
+    `pass_sign` VARCHAR(32) NOT NULL DEFAULT '' COMMENT '密码加盐',
+    `tfa_key` VARCHAR(16) NOT NULL DEFAULT '' COMMENT '二次验证码key',
+    `status` TINYINT NOT NULL DEFAULT 0 COMMENT '状态：100删除，90禁止登录',
+    `create_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `create_ip` VARCHAR(20) NOT NULL DEFAULT '' COMMENT '创建IP',
+    `update_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    `update_ip` VARCHAR(20) NOT NULL DEFAULT '' COMMENT '更新IP',
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `uniq_loginname`(`login_name`),
+    KEY `idx_create` (`create_at`),
+    KEY `idx_update` (`update_at`)
+) ENGINE = innodb DEFAULT CHARSET = utf8mb4 COMMENT = '管理员用户';

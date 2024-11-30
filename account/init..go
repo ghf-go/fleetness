@@ -41,8 +41,8 @@ func passwd(pass, sign string) string {
 }
 
 func Init(api, admin, command *core.WebRouter) {
-	g := api.Group("account")
-	g.Post("login", loginByPassAction)
+	api.Post("login", loginByPassAction)
+	g := api.Group("account", core.ApiCheckoutLoginMiddleWare)
 	g.Post("register", registerAction)
 	g.Post("changepass", changePassAction)
 	g.Post("upinfo", setUserInfoAction)
@@ -50,4 +50,13 @@ func Init(api, admin, command *core.WebRouter) {
 	g.Post("bind", bindAccountAction)
 	g.Post("send_code", sendCodeAction)
 	g.Post("cash_log", apiCashLogAction)
+
+	admin.Post("login", adminLoginAction)
+	adg := admin.Group("account", core.ApiCheckoutLoginMiddleWare)
+	adg.Post("changepasswd", adminChangeAdminPassAction)
+	adg.Post("user_add", adminUserAddAction)
+	adg.Post("user_audit", adminUserAuditAction)
+	adg.Post("user_changepass", adminUserChangePassAction)
+	adg.Post("user_list", adminUserListAction)
+	adg.Post("user_stat", adminUserStatAction)
 }
