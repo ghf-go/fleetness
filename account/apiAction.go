@@ -302,3 +302,50 @@ func apiCashLogAction(c *core.GContent) {
 
 	c.SuccessJson(ret)
 }
+
+// 收货地址列表
+func apiUserAddrListAction(c *core.GContent) {
+	p := &core.PageParam{}
+	if e := c.BindJson(p); e != nil {
+		c.FailJson(403, "参数错误")
+		return
+	}
+	list := []model.UserAddr{}
+	getDB(c).Where("user_id=?", c.GetUserID()).Offset(p.GetOffset()).Limit(p.GetPageSize()).Order("is_default DESC").Find(&list)
+	ret := []map[string]any{}
+	for _, item := range list {
+		ret = append(ret, map[string]any{
+			"id":         item.ID,
+			"mobile":     item.Mobile,
+			"consignee":  item.Consignee,
+			"province":   item.Province,
+			"city":       item.City,
+			"district":   item.District,
+			"address":    item.Address,
+			"is_default": item.IsDefault,
+		})
+	}
+	c.SuccessJson(ret)
+}
+
+// 保存收货地址
+func apiUserAddrSaveAction(c *core.GContent) {
+	p := &model.UserAddr{}
+	if e := c.BindJson(p); e != nil || p.Address == "" || p.Mobile == "" || p.City == "" || p.Province == "" || p.District == "" || p.Consignee == "" {
+		c.FailJson(403, "参数错误")
+		return
+	}
+	if p.IsDefault == 1 {
+		getDB(c).Model(&model.UserAddr{}).Where("user_id=?", c.GetUserID()).Update("is_default", 0)
+	}
+	p.UpdateIP = c.GetIP()
+	p.UserID = c.GetUserID()
+	if p.ID == 0 {
+		p.CreateIP = c.GetIP()
+	}
+	if getDB(c).Save(p).Error != nil {
+		c.FailJson(403, "修改失败")
+		return
+	}
+	c.SuccessJson("ok")
+}

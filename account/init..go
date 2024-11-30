@@ -50,6 +50,8 @@ func Init(api, admin, command *core.WebRouter) {
 	g.Post("bind", bindAccountAction)
 	g.Post("send_code", sendCodeAction)
 	g.Post("cash_log", apiCashLogAction)
+	g.Post("addrs", apiUserAddrListAction)
+	g.Post("addr_save", apiUserAddrSaveAction)
 
 	admin.Post("login", adminLoginAction)
 	adg := admin.Group("account", core.ApiCheckoutLoginMiddleWare)
