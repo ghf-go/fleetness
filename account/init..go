@@ -55,8 +55,10 @@ func Init(api, admin, command *core.WebRouter) {
 	adg := admin.Group("account", core.ApiCheckoutLoginMiddleWare)
 	adg.Post("changepasswd", adminChangeAdminPassAction)
 	adg.Post("user_add", adminUserAddAction)
+	adg.Post("user_wait_audit", adminUserWaitAuditAction)
 	adg.Post("user_audit", adminUserAuditAction)
 	adg.Post("user_changepass", adminUserChangePassAction)
-	adg.Post("user_list", adminUserListAction)
+	adg.Post("user_list", adminUserListAction) //
 	adg.Post("user_stat", adminUserStatAction)
+
 }

@@ -63,7 +63,23 @@ func adminChangeAdminPassAction(c *core.GContent) {
 }
 
 // 用户列表
-func adminUserListAction(c *core.GContent) {}
+func adminUserListAction(c *core.GContent) {
+	p := &core.PageParam{}
+	if e := c.BindJson(p); e != nil {
+		c.FailJson(403, "参数错误")
+		return
+	}
+	total := int64(0)
+	db := getDB(c)
+	list := []model.User{}
+	db.Model(&model.User{}).Where("is_audit=0").Count(&total)
+	db.Where("is_audit=0").Order("update_at DESC").Offset(p.GetOffset()).Limit(p.GetPageSize()).Find(&list)
+
+	c.SuccessJson(map[string]any{
+		"total": total,
+		"list":  list,
+	})
+}
 
 type adminUserAddActionParm struct {
 	UId    uint64 `json:"uid"`
