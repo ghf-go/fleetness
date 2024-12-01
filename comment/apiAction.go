@@ -39,11 +39,11 @@ func commentAction(c *core.GContent) {
 		UpdateIP:     c.GetIP(),
 	}).Error == nil) {
 		db.Commit()
-		c.SuccessJson("OK")
+		c.SuccessJson("success")
 		return
 	}
 	db.Rollback()
-	c.FailJson(500, "发布失败")
+	c.FailJson(403, c.Lang("save_fail"))
 
 }
 

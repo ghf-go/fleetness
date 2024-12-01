@@ -63,8 +63,8 @@ func adminFeedAuditAction(c *core.GContent) {
 		status = core.STATUS_DEL
 	}
 	if getDB(c).Model(&model.Feed{}).Where(p.ID).Update("status", status).RowsAffected == 0 {
-		c.FailJson(403, "操作失败")
+		c.FailJson(405, c.Lang("save_fail"))
 		return
 	}
-	c.SuccessJson("ok")
+	c.SuccessJson("success")
 }

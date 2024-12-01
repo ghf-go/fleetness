@@ -56,6 +56,6 @@ func adminFeedBackReplayAction(c *core.GContent) {
 		"replay_at":      time.Now(),
 		"replay_content": p.Content,
 	})
-	c.SuccessJson("OK")
+	c.SuccessJson("success")
 
 }

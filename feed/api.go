@@ -51,7 +51,7 @@ func apiFeedCreateAction(c *core.GContent) {
 		fm.FeedType = FEED_TYPE_VOTE
 		e, _ := c.Tx(db, func(tx *gorm.DB) (error, any) {
 			if tx.Save(fm).Error != nil {
-				return errors.New("操作失败"), ""
+				return errors.New(c.Lang("save_fail")), ""
 			}
 			for _, item := range p.VoteItem {
 				if tx.Save(&model.FeedVote{
@@ -60,19 +60,19 @@ func apiFeedCreateAction(c *core.GContent) {
 					CreateIP: c.GetIP(),
 					UpdateIP: c.GetIP(),
 				}).Error != nil {
-					return errors.New("操作失败"), ""
+					return errors.New(c.Lang("save_fail")), ""
 				}
 			}
 			return nil, ""
 		})
 		if e != nil {
-			c.FailJson(403, "操作失败")
+			c.FailJson(405, c.Lang("save_fail"))
 			return
 		}
 	} else {
 		fm.FeedType = FEED_TYPE_BLOG
 		if db.Save(fm).Error != nil {
-			c.FailJson(403, "操作失败")
+			c.FailJson(405, c.Lang("save_fail"))
 			return
 		}
 	}
@@ -134,7 +134,7 @@ func apiFeedVoteAction(c *core.GContent) {
 	}
 	e, _ := c.Tx(db, func(tx *gorm.DB) (error, any) {
 		if tx.Model(&model.FeedVote{}).Where("feed_id=? AND id IN ?", p.Id, p.Items).Update("votes", gorm.Expr("votes+1")).RowsAffected == 0 {
-			return errors.New("操作失败"), ""
+			return errors.New(c.Lang("save_fail")), ""
 		}
 		for _, id := range p.Items {
 			if tx.Save(&model.FeedVoteLog{
@@ -144,13 +144,13 @@ func apiFeedVoteAction(c *core.GContent) {
 				CreateIP: c.GetIP(),
 				UpdateIP: c.GetIP(),
 			}).Error != nil {
-				return errors.New("操作失败"), ""
+				return errors.New(c.Lang("save_fail")), ""
 			}
 		}
 		return nil, ""
 	})
 	if e != nil {
-		c.FailJson(403, "操作失败")
+		c.FailJson(405, c.Lang("save_fail"))
 		return
 	}
 	c.SuccessJson(formatFeed(c, c.GetUserID(), *fm))

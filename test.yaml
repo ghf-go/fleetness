@@ -53,3 +53,11 @@ meta:
 lang:
   zh-cn:
     client_param_error: "参数错误"
+    save_success: "操作成功"
+    save_fail: "操作失败"
+    sys_error: "系统异常"
+  us-en:
+    client_param_error: "param is error"
+    save_success: "success"
+    save_fail: "fail"
+    sys_error: "system is error"

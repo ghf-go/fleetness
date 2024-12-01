@@ -69,8 +69,8 @@ func adminAuditAction(c *core.GContent) {
 		if status == core.STATUS_DEL {
 			getDB(c).Model(&model.CommentStat{}).Where(p.ID).Update("target_counts", gorm.Expr("target_counts-1"))
 		}
-		c.FailJson(403, "操作失败")
+		c.FailJson(405, c.Lang("save_fail"))
 		return
 	}
-	c.SuccessJson("ok")
+	c.SuccessJson("success")
 }

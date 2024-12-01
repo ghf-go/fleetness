@@ -41,10 +41,10 @@ func adminVerPublishAction(c *core.GContent) {
 		"is_online": 1,
 		"update_ip": c.GetIP(),
 	}).Error != nil {
-		c.FailJson(403, "操作失败")
+		c.FailJson(405, c.Lang("save_fail"))
 		return
 	}
-	c.SuccessJson("OK")
+	c.SuccessJson("success")
 }
 
 type adminVerSaveActionParam struct {
@@ -69,8 +69,8 @@ func adminVerSaveAction(c *core.GContent) {
 		CreateIP:   c.GetIP(),
 		UpdateIP:   c.GetIP(),
 	}).Error != nil {
-		c.FailJson(403, "操作失败")
+		c.FailJson(405, c.Lang("save_fail"))
 		return
 	}
-	c.SuccessJson("OK")
+	c.SuccessJson("success")
 }

@@ -28,5 +28,5 @@ func adminSetConfigAction(c *core.GContent) {
 		c.SuccessJson(GetConfigRoot(c, p.Key, p.Data))
 		return
 	}
-	c.FailJson(403, "更新失败")
+	c.FailJson(403, c.Lang("save_fail"))
 }

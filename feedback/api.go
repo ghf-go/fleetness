@@ -17,7 +17,7 @@ func apiFeedBackSendAction(c *core.GContent) {
 	p.ReplayAt = nil
 	p.UserID = c.GetUserID()
 	getDB(c).Save(p)
-	c.SuccessJson("ok")
+	c.SuccessJson("success")
 }
 
 type apiFeedBackListParam struct {

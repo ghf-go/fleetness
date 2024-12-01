@@ -39,7 +39,7 @@ func adminModuleSaveAction(c *core.GContent) {
 		p.CreateIP = c.GetIP()
 		getDB(c).Save(p)
 	}
-	c.SuccessJson("OK")
+	c.SuccessJson("success")
 }
 
 type adminModuleItemsActionParam struct {
@@ -82,7 +82,7 @@ func adminModuleItemSaveAction(c *core.GContent) {
 		p.CreateIP = c.GetIP()
 		getDB(c).Save(p)
 	}
-	c.SuccessJson("OK")
+	c.SuccessJson("success")
 }
 
 type adminModuleItemDetailActionParam struct {

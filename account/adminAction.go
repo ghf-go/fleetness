@@ -33,7 +33,7 @@ func adminLoginAction(c *core.GContent) {
 		return
 	}
 	c.SetUserID(fmt.Sprintf("%d", admUser.ID))
-	c.SuccessJson("登录成功")
+	c.SuccessJson("success")
 
 }
 
@@ -55,11 +55,11 @@ func adminChangeAdminPassAction(c *core.GContent) {
 		"update_ip": c.GetIP(),
 	}
 	if getDB(c).Model(&model.AdminUser{}).Where(c.GetUserID()).Updates(setData).RowsAffected == 0 {
-		c.FailJson(403, "操作失败")
+		c.FailJson(405, c.Lang("save_fail"))
 		return
 	}
 
-	c.SuccessJson("修改成功")
+	c.SuccessJson("success")
 }
 
 // 用户列表
@@ -108,11 +108,11 @@ func adminUserChangePassAction(c *core.GContent) {
 		"update_ip": c.GetIP(),
 	}
 	if getDB(c).Model(&model.User{}).Where(p.UId).Updates(setData).RowsAffected == 0 {
-		c.FailJson(403, "操作失败")
+		c.FailJson(405, c.Lang("save_fail"))
 		return
 	}
 
-	c.SuccessJson("修改成功")
+	c.SuccessJson("success")
 }
 
 // 用户信息统计
@@ -145,7 +145,7 @@ func adminUserAuditAction(c *core.GContent) {
 			"update_ip": c.GetIP(),
 		})
 	}
-	c.SuccessJson("ok")
+	c.SuccessJson("success")
 }
 
 // 账号待审核信息

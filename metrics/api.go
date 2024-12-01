@@ -140,6 +140,6 @@ func apiUploadAction(c *core.GContent) {
 			db.Save(item)
 		}
 	}
-	c.SuccessJson("ok")
+	c.SuccessJson("success")
 
 }

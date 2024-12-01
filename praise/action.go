@@ -38,7 +38,7 @@ func praiseAction(c *core.GContent) {
 			UpdateIP:   c.GetIP(),
 		}).Error != nil {
 			tx.Rollback()
-			c.FailJson(500, "操作失败")
+			c.FailJson(403, c.Lang("save_fail"))
 			return
 		}
 
@@ -50,7 +50,7 @@ func praiseAction(c *core.GContent) {
 			UpdateIP:     c.GetIP(),
 		}).Error != nil {
 			tx.Rollback()
-			c.FailJson(500, "操作失败")
+			c.FailJson(403, c.Lang("save_fail"))
 			return
 		}
 		tx.Commit()
@@ -84,13 +84,13 @@ func unPraiseAction(c *core.GContent) {
 		tx := db.Begin()
 		if tx.Delete(row, "user_id=? AND target_type=? AND target_id=?", c.GetUserID(), req.TargetType, req.TargetId).Error != nil {
 			tx.Rollback()
-			c.FailJson(500, "操作失败")
+			c.FailJson(403, c.Lang("save_fail"))
 			return
 		}
 
 		if tx.Model(stat).Where("target_type=? AND target_id=?", req.TargetType, req.TargetId).Update("target_counts", gorm.Expr("target_counts-?", 1)).Error != nil {
 			tx.Rollback()
-			c.FailJson(500, "操作失败")
+			c.FailJson(403, c.Lang("save_fail"))
 			return
 		}
 		tx.Commit()

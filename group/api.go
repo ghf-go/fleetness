@@ -30,7 +30,7 @@ func apiGroupSaveAction(c *core.GContent) {
 		c.FailJson(403, e.Error())
 		return
 	}
-	c.SuccessJson("ok")
+	c.SuccessJson("success")
 }
 
 type apiGroupDelActionParam struct {
@@ -45,10 +45,10 @@ func apiGroupDelAction(c *core.GContent) {
 		return
 	}
 	if GroupDel(c, c.GetUserID(), p.ID) {
-		c.SuccessJson("ok")
+		c.SuccessJson("success")
 		return
 	}
-	c.FailJson(403, "操作失败")
+	c.FailJson(405, c.Lang("save_fail"))
 }
 
 // 添加分组信息
@@ -62,7 +62,7 @@ func apiGroupAddItemAction(c *core.GContent) {
 		c.FailJson(403, e.Error())
 		return
 	}
-	c.SuccessJson("ok")
+	c.SuccessJson("success")
 }
 
 type apiGroupDelItemActionParams struct {
@@ -81,7 +81,7 @@ func apiGroupDelItemAction(c *core.GContent) {
 		c.FailJson(403, e.Error())
 		return
 	}
-	c.SuccessJson("ok")
+	c.SuccessJson("success")
 }
 
 type apiGroupMoveItemActionParam struct {
@@ -101,7 +101,7 @@ func apiGroupMoveItemAction(c *core.GContent) {
 		return
 	}
 	GroupItemMove(c, c.GetUserID(), p.OldID, p.NewID, p.TargetIds...)
-	c.SuccessJson("ok")
+	c.SuccessJson("success")
 	// if p.Page < 1 {
 	// 	p.Page = 1
 	// }

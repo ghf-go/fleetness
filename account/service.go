@@ -63,7 +63,7 @@ func UserCashLog(c *core.GContent, uid uint64, cashType string, amount int, msg 
 			Ukey:     cashType,
 			Val:      amount,
 		}).Error != nil {
-			return errors.New("更新失败"), ""
+			return errors.New(c.Lang("save_fail")), ""
 		}
 		if tx.Save(&model.UserCashLog{
 			CreateIP: c.GetIP(),
@@ -73,7 +73,7 @@ func UserCashLog(c *core.GContent, uid uint64, cashType string, amount int, msg 
 			Val:      amount,
 			Content:  msg,
 		}).Error != nil {
-			return errors.New("更新失败"), ""
+			return errors.New(c.Lang("save_fail")), ""
 		}
 		return nil, ""
 	})

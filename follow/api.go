@@ -25,7 +25,7 @@ func apiFollowAction(c *core.GContent) {
 	uid := c.GetUserID()
 	db.First(fm, "user_id=? AND target_id=?", uid, p.ID)
 	if fm.ID > 0 {
-		c.SuccessJson("ok")
+		c.SuccessJson("success")
 		return
 	}
 	ip := c.GetIP()
@@ -63,7 +63,7 @@ func apiFollowAction(c *core.GContent) {
 		return nil, "ok"
 	})
 	if e != nil {
-		c.FailJson(403, "操作失败")
+		c.FailJson(405, c.Lang("save_fail"))
 		return
 	}
 	c.SuccessJson(ret)
@@ -82,7 +82,7 @@ func apiUnFollowAction(c *core.GContent) {
 	uid := c.GetUserID()
 	db.First(fm, "user_id=? AND target_id=?", uid, p.ID)
 	if fm.ID == 0 {
-		c.SuccessJson("ok")
+		c.SuccessJson("success")
 		return
 	}
 	e, ret := c.Tx(db, func(tx *gorm.DB) (error, any) {
@@ -92,15 +92,15 @@ func apiUnFollowAction(c *core.GContent) {
 
 		m := &model.Follow{}
 		if tx.Model(m).Where("user_id=?", uid).Update("follows", gorm.Expr("follows-1")).RowsAffected <= 0 {
-			return errors.New("操作失败"), ""
+			return errors.New(c.Lang("save_fail")), ""
 		}
 		if tx.Model(m).Where("user_id=?", p.ID).Update("fans", gorm.Expr("fans-1")).RowsAffected <= 0 {
-			return errors.New("操作失败"), ""
+			return errors.New(c.Lang("save_fail")), ""
 		}
 		return nil, "ok"
 	})
 	if e != nil {
-		c.FailJson(403, "操作失败")
+		c.FailJson(405, c.Lang("save_fail"))
 		return
 	}
 	c.SuccessJson(ret)

@@ -41,7 +41,7 @@ func loginByPassAction(c *core.GContent) {
 		return
 	}
 	c.SetUserID(fmt.Sprintf("%d", user.ID))
-	c.SuccessJson("登录成功")
+	c.SuccessJson("success")
 
 }
 
@@ -117,7 +117,7 @@ func registerAction(c *core.GContent) {
 		return
 	}
 	tx.Commit()
-	c.SuccessJson("注册成功")
+	c.SuccessJson("success")
 }
 
 type changePass struct {
@@ -152,10 +152,10 @@ func changePassAction(c *core.GContent) {
 		"passwd":    passwd(parmas.Pass, sign),
 		"update_ip": c.GetIP(),
 	}).RowsAffected > 0 {
-		c.SuccessJson("ok")
+		c.SuccessJson("success")
 		return
 	}
-	c.FailJson(403, "修改失败")
+	c.FailJson(403, c.Lang("save_fail"))
 }
 
 type bindAccountParams struct {
@@ -192,7 +192,7 @@ func bindAccountAction(c *core.GContent) {
 		ub.BindType = p.BindType
 		db.Create(ub)
 	}
-	c.SuccessJson("ok")
+	c.SuccessJson("success")
 }
 
 // 获取账号信息
@@ -233,7 +233,7 @@ func setUserInfoAction(c *core.GContent) {
 			})
 		}
 	}
-	c.SuccessJson("ok")
+	c.SuccessJson("success")
 }
 
 type sendCodeParam struct {
@@ -255,7 +255,7 @@ func sendCodeAction(c *core.GContent) {
 		// 	c.FailJson(500, e.Error())
 		// 	return
 		// }
-		c.SuccessJson("ok")
+		c.SuccessJson("success")
 		return
 	}
 }
@@ -335,8 +335,8 @@ func apiUserAddrSaveAction(c *core.GContent) {
 		p.CreateIP = c.GetIP()
 	}
 	if getDB(c).Save(p).Error != nil {
-		c.FailJson(403, "修改失败")
+		c.FailJson(403, c.Lang("save_fail"))
 		return
 	}
-	c.SuccessJson("ok")
+	c.SuccessJson("success")
 }

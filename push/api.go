@@ -48,5 +48,5 @@ func apiRegDeviceAction(c *core.GContent) {
 			"os_ver":  p.OsVer,
 		})
 	}
-	c.SuccessJson("OK")
+	c.SuccessJson("success")
 }

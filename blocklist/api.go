@@ -30,11 +30,11 @@ func apiAddAction(c *core.GContent) {
 			CreateIP:   c.GetIP(),
 			UpdateIP:   c.GetIP(),
 		}).Error != nil {
-			c.FailJson(403, "保存失败")
+			c.FailJson(403, c.Lang("save_fail"))
 			return
 		}
 	}
-	c.SuccessJson("OK")
+	c.SuccessJson("success")
 }
 
 // 删除黑名单
@@ -45,10 +45,10 @@ func apiDelAction(c *core.GContent) {
 		return
 	}
 	if getDB(c).Delete(&model.Blocklist{}, "user_id=? AND target_type=? AND target_id=?", c.GetUserID(), p.TargetType, p.TargetId).Error != nil {
-		c.FailJson(403, "保存失败")
+		c.FailJson(403, c.Lang("save_fail"))
 		return
 	}
-	c.SuccessJson("OK")
+	c.SuccessJson("success")
 }
 
 // 黑名单列表

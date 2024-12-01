@@ -25,7 +25,7 @@ func apiSendAction(c *core.GContent) {
 		return
 	}
 	if blocklist.InBlockList(c, p.ToUid) {
-		c.FailJson(403, "发送失败")
+		c.FailJson(403, c.Lang("save_fail"))
 		return
 	}
 	uid := c.GetUserID()
@@ -60,7 +60,7 @@ func apiSendAction(c *core.GContent) {
 			LastMsg:  summary,
 			Mkey:     mkey,
 		}).Error != nil {
-			return errors.New("发送失败"), ""
+			return errors.New(c.Lang("save_fail")), ""
 		}
 		if tx.Model(&model.MessageUser{}).Where("user_id=? AND to_id=?", p.ToUid, c.GetUserID()).Updates(map[string]any{
 			"last_time": time.Now().UnixMicro(),
@@ -78,14 +78,14 @@ func apiSendAction(c *core.GContent) {
 			Mkey:     mkey,
 			UnReads:  1,
 		}).Error != nil {
-			return errors.New("发送失败"), ""
+			return errors.New(c.Lang("save_fail")), ""
 		}
 		return nil, ""
 	}); e != nil {
 		c.FailJson(403, e.Error())
 		return
 	}
-	c.SuccessJson("OK")
+	c.SuccessJson("success")
 }
 
 type apiMessageListActionParam struct {
@@ -180,7 +180,7 @@ func apiChatDelAction(c *core.GContent) {
 		return
 	}
 	if getDB(c).Delete(&model.MessageUser{}, "user_id=? AND to_id=?", c.GetUserID(), p.ToUid).Error != nil {
-		c.FailJson(403, "删除失败")
+		c.FailJson(403, c.Lang("save_fail"))
 	}
-	c.SuccessJson("OK")
+	c.SuccessJson("success")
 }

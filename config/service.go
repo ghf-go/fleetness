@@ -110,7 +110,7 @@ func SetConfigRoot(c *core.GContent, confkey string, val map[string]map[string]s
 					"val":       v,
 					"update_ip": c.GetIP(),
 				}).Error != nil {
-					return errors.New("操作失败"), ""
+					return errors.New(c.Lang("save_fail")), ""
 				}
 			}
 		}
@@ -137,7 +137,7 @@ func SetConfigGroup(c *core.GContent, confkey, groupkey string, val map[string]s
 				"val":       v,
 				"update_ip": c.GetIP(),
 			}).Error != nil {
-				return errors.New("操作失败"), ""
+				return errors.New(c.Lang("save_fail")), ""
 			}
 		}
 		return nil, ""

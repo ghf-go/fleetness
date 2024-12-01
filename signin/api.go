@@ -68,8 +68,8 @@ func apiSignAction(c *core.GContent) {
 	}
 	if db.Save(nrow).Error == nil {
 		callHandle(c.GetUserID(), nrow.Times, nrow.Continued)
-		c.SuccessJson("ok")
+		c.SuccessJson("success")
 		return
 	}
-	c.FailJson(403, "签到失败")
+	c.FailJson(403, c.Lang("save_fail"))
 }
