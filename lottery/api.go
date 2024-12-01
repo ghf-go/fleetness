@@ -18,7 +18,7 @@ type apiLotteryParam struct {
 func apiGetLotteryInfoAction(c *core.GContent) {
 	p := &apiLotteryParam{}
 	if e := c.BindJson(p); e != nil || p.ID < 1 {
-		c.FailJson(403, "参数错误")
+		c.FailJson(403, c.Lang("client_param_error"))
 		return
 	}
 	info := &model.Lottery{}
@@ -61,7 +61,7 @@ func apiGetLotteryInfoAction(c *core.GContent) {
 func apiLotteryAction(c *core.GContent) {
 	p := &apiLotteryParam{}
 	if e := c.BindJson(p); e != nil || p.ID < 1 {
-		c.FailJson(403, "参数错误")
+		c.FailJson(403, c.Lang("client_param_error"))
 		return
 	}
 	info := &model.Lottery{}
@@ -124,7 +124,7 @@ func apiLotteryAction(c *core.GContent) {
 func apiLotteryLogAction(c *core.GContent) {
 	p := &apiLotteryParam{}
 	if e := c.BindJson(p); e != nil || p.ID < 1 {
-		c.FailJson(403, "参数错误")
+		c.FailJson(403, c.Lang("client_param_error"))
 		return
 	}
 	db := getDB(c)

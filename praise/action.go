@@ -15,7 +15,7 @@ type praiseParams struct {
 func praiseAction(c *core.GContent) {
 	req := &praiseParams{}
 	if e := c.BindJson(req); e != nil {
-		c.FailJson(403, "参数错误")
+		c.FailJson(403, c.Lang("client_param_error"))
 		return
 	}
 	db := getDB(c)
@@ -67,7 +67,7 @@ func praiseAction(c *core.GContent) {
 func unPraiseAction(c *core.GContent) {
 	req := &praiseParams{}
 	if e := c.BindJson(req); e != nil {
-		c.FailJson(403, "参数错误")
+		c.FailJson(403, c.Lang("client_param_error"))
 		return
 	}
 	db := getDB(c)

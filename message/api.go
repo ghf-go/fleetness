@@ -21,7 +21,7 @@ type apiSendActionParam struct {
 func apiSendAction(c *core.GContent) {
 	p := &apiSendActionParam{}
 	if e := c.BindJson(p); e != nil || p.ToUid < 1 || p.Content == "" {
-		c.FailJson(403, "参数错误")
+		c.FailJson(403, c.Lang("client_param_error"))
 		return
 	}
 	if blocklist.InBlockList(c, p.ToUid) {
@@ -98,7 +98,7 @@ type apiMessageListActionParam struct {
 func apiMessageListAction(c *core.GContent) {
 	p := &apiMessageListActionParam{}
 	if e := c.BindJson(p); e != nil || p.MKey == "" {
-		c.FailJson(403, "参数错误")
+		c.FailJson(403, c.Lang("client_param_error"))
 		return
 	}
 	uid := c.GetUserID()
@@ -147,7 +147,7 @@ type apiChatListActionParam struct {
 func apiChatListAction(c *core.GContent) {
 	p := &apiChatListActionParam{}
 	if e := c.BindJson(p); e != nil {
-		c.FailJson(403, "参数错误")
+		c.FailJson(403, c.Lang("client_param_error"))
 		return
 	}
 	mlist := []model.MessageUser{}
@@ -176,7 +176,7 @@ type apiChatDelActionParam struct {
 func apiChatDelAction(c *core.GContent) {
 	p := &apiChatDelActionParam{}
 	if e := c.BindJson(p); e != nil || p.ToUid == 0 {
-		c.FailJson(403, "参数错误")
+		c.FailJson(403, c.Lang("client_param_error"))
 		return
 	}
 	if getDB(c).Delete(&model.MessageUser{}, "user_id=? AND to_id=?", c.GetUserID(), p.ToUid).Error != nil {

@@ -22,7 +22,7 @@ type apiFeedCreateActionParam struct {
 func apiFeedCreateAction(c *core.GContent) {
 	p := &apiFeedCreateActionParam{}
 	if e := c.BindJson(p); e != nil {
-		c.FailJson(403, "参数错误")
+		c.FailJson(403, c.Lang("client_param_error"))
 		return
 	}
 	isVote := false
@@ -88,7 +88,7 @@ type apiFeedListActionParam struct {
 func apiFeedListAction(c *core.GContent) {
 	p := &apiFeedListActionParam{}
 	if e := c.BindJson(p); e != nil {
-		c.FailJson(403, "参数错误")
+		c.FailJson(403, c.Lang("client_param_error"))
 		return
 	}
 	flist := []model.Feed{}
@@ -113,7 +113,7 @@ type apiFeedVoteActionParam struct {
 func apiFeedVoteAction(c *core.GContent) {
 	p := &apiFeedVoteActionParam{}
 	if e := c.BindJson(p); e != nil || p.Id == 0 || len(p.Items) == 0 {
-		c.FailJson(403, "参数错误")
+		c.FailJson(403, c.Lang("client_param_error"))
 		return
 	}
 

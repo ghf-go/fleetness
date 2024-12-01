@@ -12,7 +12,7 @@ import (
 func adminListAction(c *core.GContent) {
 	p := &core.PageParam{}
 	if e := c.BindJson(p); e != nil {
-		c.FailJson(403, "参数错误")
+		c.FailJson(403, c.Lang("client_param_error"))
 		return
 	}
 	flist := []model.Comment{}
@@ -30,7 +30,7 @@ func adminListAction(c *core.GContent) {
 func adminWaitAuditListAction(c *core.GContent) {
 	p := &core.PageParam{}
 	if e := c.BindJson(p); e != nil {
-		c.FailJson(403, "参数错误")
+		c.FailJson(403, c.Lang("client_param_error"))
 		return
 	}
 	flist := []model.Comment{}
@@ -53,7 +53,7 @@ type adminAuditActionParam struct {
 func adminAuditAction(c *core.GContent) {
 	p := &adminAuditActionParam{}
 	if e := c.BindJson(p); e != nil || p.ID == 0 || p.Act == "" {
-		c.FailJson(403, "参数错误")
+		c.FailJson(403, c.Lang("client_param_error"))
 		return
 	}
 	status := 0

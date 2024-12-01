@@ -15,7 +15,7 @@ type favoriteParams struct {
 func favoriteAction(c *core.GContent) {
 	req := &favoriteParams{}
 	if e := c.BindJson(req); e != nil {
-		c.FailJson(403, "参数错误")
+		c.FailJson(403, c.Lang("client_param_error"))
 		return
 	}
 	db := getDB(c)
@@ -67,7 +67,7 @@ func favoriteAction(c *core.GContent) {
 func unFavoriteAction(c *core.GContent) {
 	req := &favoriteParams{}
 	if e := c.BindJson(req); e != nil {
-		c.FailJson(403, "参数错误")
+		c.FailJson(403, c.Lang("client_param_error"))
 		return
 	}
 	db := getDB(c)

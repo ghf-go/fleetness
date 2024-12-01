@@ -26,7 +26,7 @@ type adminStatActionParam struct {
 func adminStatAction(c *core.GContent) {
 	p := &adminStatActionParam{}
 	if e := c.BindJson(p); e != nil {
-		c.FailJson(403, "参数错误")
+		c.FailJson(403, c.Lang("client_param_error"))
 		return
 	}
 	ids := []uint64{}

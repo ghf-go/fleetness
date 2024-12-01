@@ -15,7 +15,7 @@ type apiParam struct {
 func apiAddAction(c *core.GContent) {
 	p := &apiParam{}
 	if e := c.BindJson(p); e != nil || p.TargetId == 0 {
-		c.FailJson(403, "参数错误")
+		c.FailJson(403, c.Lang("client_param_error"))
 		return
 	}
 	m := &model.Blocklist{}
@@ -41,7 +41,7 @@ func apiAddAction(c *core.GContent) {
 func apiDelAction(c *core.GContent) {
 	p := &apiParam{}
 	if e := c.BindJson(p); e != nil || p.TargetId == 0 {
-		c.FailJson(403, "参数错误")
+		c.FailJson(403, c.Lang("client_param_error"))
 		return
 	}
 	if getDB(c).Delete(&model.Blocklist{}, "user_id=? AND target_type=? AND target_id=?", c.GetUserID(), p.TargetType, p.TargetId).Error != nil {
@@ -55,7 +55,7 @@ func apiDelAction(c *core.GContent) {
 func apiUserListAction(c *core.GContent) {
 	p := &core.PageParam{}
 	if e := c.BindJson(p); e != nil {
-		c.FailJson(403, "参数错误")
+		c.FailJson(403, c.Lang("client_param_error"))
 		return
 	}
 	blist := []model.Blocklist{}

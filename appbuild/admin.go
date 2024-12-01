@@ -9,7 +9,7 @@ import (
 func adminModuleListAction(c *core.GContent) {
 	p := &core.PageParam{}
 	if e := c.BindJson(p); e != nil {
-		c.FailJson(403, "参数错误")
+		c.FailJson(403, c.Lang("client_param_error"))
 		return
 	}
 	total := int64(0)
@@ -25,7 +25,7 @@ func adminModuleListAction(c *core.GContent) {
 func adminModuleSaveAction(c *core.GContent) {
 	p := &model.AppBuildModule{}
 	if e := c.BindJson(p); e != nil || p.Name == "" || p.ModuleDesc == "" {
-		c.FailJson(403, "参数错误")
+		c.FailJson(403, c.Lang("client_param_error"))
 		return
 	}
 	p.UpdateIP = c.GetIP()
@@ -50,7 +50,7 @@ type adminModuleItemsActionParam struct {
 func adminModuleItemsAction(c *core.GContent) {
 	p := &adminModuleItemsActionParam{}
 	if e := c.BindJson(p); e != nil || p.ModelId == 0 {
-		c.FailJson(403, "参数错误")
+		c.FailJson(403, c.Lang("client_param_error"))
 		return
 	}
 	list := []model.AppBuildTemplate{}
@@ -65,7 +65,7 @@ func adminModuleItemsAction(c *core.GContent) {
 func adminModuleItemSaveAction(c *core.GContent) {
 	p := &model.AppBuildTemplate{}
 	if e := c.BindJson(p); e != nil || p.ModuleID == 0 || p.Platform == "" || p.Fname == "" || p.Fdesc == "" || p.Ftemplate == "" {
-		c.FailJson(403, "参数错误")
+		c.FailJson(403, c.Lang("client_param_error"))
 		return
 	}
 	p.UpdateIP = c.GetIP()
@@ -93,7 +93,7 @@ type adminModuleItemDetailActionParam struct {
 func adminModuleItemDetailAction(c *core.GContent) {
 	p := &adminModuleItemDetailActionParam{}
 	if e := c.BindJson(p); e != nil || p.ItemID == 0 {
-		c.FailJson(403, "参数错误")
+		c.FailJson(403, c.Lang("client_param_error"))
 		return
 	}
 	ret := &model.AppBuildTemplate{}

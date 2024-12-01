@@ -50,3 +50,6 @@ payment:
     gateway:
 meta:
   aa: dffd
+lang:
+  zh-cn:
+    client_param_error: "参数错误"

@@ -48,7 +48,7 @@ func adminFeedBackReplayAction(c *core.GContent) {
 		return
 	}
 	if p.ID == 0 || p.Content == "" {
-		c.FailJson(403, "参数错误")
+		c.FailJson(403, c.Lang("client_param_error"))
 		return
 	}
 	getDB(c).Model(&model.Feedback{}).Where(p.ID).Updates(map[string]any{

@@ -19,7 +19,7 @@ type apiRegDeviceActionParam struct {
 func apiRegDeviceAction(c *core.GContent) {
 	p := &apiRegDeviceActionParam{}
 	if e := c.BindJson(p); e != nil || p.Platform == "" || p.Channel == "" || p.Token == "" {
-		c.FailJson(403, "参数错误")
+		c.FailJson(403, c.Lang("client_param_error"))
 		return
 	}
 	// PushAllSse("asdf", "asdf")

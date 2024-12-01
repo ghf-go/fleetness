@@ -9,7 +9,7 @@ import (
 func adminFeedListAction(c *core.GContent) {
 	p := &core.PageParam{}
 	if e := c.BindJson(p); e != nil {
-		c.FailJson(403, "参数错误")
+		c.FailJson(403, c.Lang("client_param_error"))
 		return
 	}
 	flist := []model.Feed{}
@@ -27,7 +27,7 @@ func adminFeedListAction(c *core.GContent) {
 func adminFeedWaitAuditAction(c *core.GContent) {
 	p := &core.PageParam{}
 	if e := c.BindJson(p); e != nil {
-		c.FailJson(403, "参数错误")
+		c.FailJson(403, c.Lang("client_param_error"))
 		return
 	}
 	flist := []model.Feed{}
@@ -50,7 +50,7 @@ type adminFeedAuditActionParam struct {
 func adminFeedAuditAction(c *core.GContent) {
 	p := &adminFeedAuditActionParam{}
 	if e := c.BindJson(p); e != nil || p.ID == 0 || p.Act == "" {
-		c.FailJson(403, "参数错误")
+		c.FailJson(403, c.Lang("client_param_error"))
 		return
 	}
 	status := 0

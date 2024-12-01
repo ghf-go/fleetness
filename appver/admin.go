@@ -11,7 +11,7 @@ import (
 func adminVerListAction(c *core.GContent) {
 	p := &core.PageParam{}
 	if e := c.BindJson(p); e != nil {
-		c.FailJson(403, "参数错误")
+		c.FailJson(403, c.Lang("client_param_error"))
 		return
 	}
 	db := getDB(c)
@@ -34,7 +34,7 @@ type adminVerPublishActionParam struct {
 func adminVerPublishAction(c *core.GContent) {
 	p := &adminVerPublishActionParam{}
 	if e := c.BindJson(p); e != nil {
-		c.FailJson(403, "参数错误")
+		c.FailJson(403, c.Lang("client_param_error"))
 		return
 	}
 	if getDB(c).Model(&model.AppVer{}).Where("app_ver=?", p.Ver).Updates(map[string]any{
@@ -58,7 +58,7 @@ type adminVerSaveActionParam struct {
 func adminVerSaveAction(c *core.GContent) {
 	p := &adminVerSaveActionParam{}
 	if e := c.BindJson(p); e != nil || !strings.HasPrefix(p.ApkUrl, "http") || !strings.HasPrefix(p.WgtUrl, "http") {
-		c.FailJson(403, "参数错误")
+		c.FailJson(403, c.Lang("client_param_error"))
 		return
 	}
 	if getDB(c).Save(&model.AppVer{

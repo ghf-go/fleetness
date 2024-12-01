@@ -10,7 +10,7 @@ type apiCheckUpdateActionParam struct {
 func apiCheckUpdateAction(c *core.GContent) {
 	p := &apiCheckUpdateActionParam{}
 	if e := c.BindJson(p); e != nil {
-		c.FailJson(403, "参数错误")
+		c.FailJson(403, c.Lang("client_param_error"))
 		return
 	}
 	c.SuccessJson(GetLastVer(c, p.Ver))

@@ -19,7 +19,7 @@ type commentParams struct {
 func commentAction(c *core.GContent) {
 	req := &commentParams{}
 	if e := c.BindJson(req); e != nil {
-		c.FailJson(403, "参数错误")
+		c.FailJson(403, c.Lang("client_param_error"))
 		return
 	}
 	db := getDB(c).Begin()
@@ -59,7 +59,7 @@ type commentListParams struct {
 func commentListAction(c *core.GContent) {
 	req := &commentListParams{}
 	if e := c.BindJson(req); e != nil {
-		c.FailJson(403, "参数错误")
+		c.FailJson(403, c.Lang("client_param_error"))
 		return
 	}
 	if req.Page == 0 {

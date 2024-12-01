@@ -19,7 +19,7 @@ type adminLoginActionParam struct {
 func adminLoginAction(c *core.GContent) {
 	p := &adminLoginActionParam{}
 	if e := c.BindJson(p); e != nil || p.Code == "" || p.LoginName == "" || p.Passwd == "" {
-		c.FailJson(403, "参数错误")
+		c.FailJson(403, c.Lang("client_param_error"))
 		return
 	}
 	admUser := &model.AdminUser{}
@@ -45,7 +45,7 @@ type adminChangeAdminPassActionParam struct {
 func adminChangeAdminPassAction(c *core.GContent) {
 	p := &adminChangeAdminPassActionParam{}
 	if e := c.BindJson(p); e != nil || p.Passwd == "" {
-		c.FailJson(403, "参数错误")
+		c.FailJson(403, c.Lang("client_param_error"))
 		return
 	}
 	sign := utils.RandStr(10)
@@ -66,7 +66,7 @@ func adminChangeAdminPassAction(c *core.GContent) {
 func adminUserListAction(c *core.GContent) {
 	p := &core.PageParam{}
 	if e := c.BindJson(p); e != nil {
-		c.FailJson(403, "参数错误")
+		c.FailJson(403, c.Lang("client_param_error"))
 		return
 	}
 	total := int64(0)
@@ -98,7 +98,7 @@ type adminUserChangePassActionParam struct {
 func adminUserChangePassAction(c *core.GContent) {
 	p := &adminUserChangePassActionParam{}
 	if e := c.BindJson(p); e != nil || p.Passwd == "" || p.UId == 0 {
-		c.FailJson(403, "参数错误")
+		c.FailJson(403, c.Lang("client_param_error"))
 		return
 	}
 	sign := utils.RandStr(10)
@@ -128,7 +128,7 @@ type adminUserAuditActionParam struct {
 func adminUserAuditAction(c *core.GContent) {
 	p := &adminUserAuditActionParam{}
 	if e := c.BindJson(p); e != nil || p.Uid == 0 || p.Key == "" || p.Act == "" {
-		c.FailJson(403, "参数错误")
+		c.FailJson(403, c.Lang("client_param_error"))
 		return
 	}
 	if p.Act == "accept" {
@@ -152,7 +152,7 @@ func adminUserAuditAction(c *core.GContent) {
 func adminUserWaitAuditAction(c *core.GContent) {
 	p := &core.PageParam{}
 	if e := c.BindJson(p); e != nil {
-		c.FailJson(403, "参数错误")
+		c.FailJson(403, c.Lang("client_param_error"))
 		return
 	}
 	total := int64(0)

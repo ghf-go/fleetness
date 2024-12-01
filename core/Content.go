@@ -41,6 +41,7 @@ type GContent struct {
 	responseBytes []byte
 	userId        uint64
 	ctx           context.Context
+	clientlang    string
 }
 
 // 新建GContent
@@ -193,6 +194,23 @@ func (c *GContent) GetCache(conname ...string) *redis.Client {
 	}
 	panic("缓存配置不存在" + conName)
 
+}
+
+// 国际化语言
+func (c *GContent) Lang(key string) string {
+	if c.clientlang == "" {
+		kks := strings.Split(c.r.Header.Get("accept-language"), ",")
+		for _, item := range kks {
+			iks := strings.Split(item, ";")
+			for _, v := range iks {
+				if strings.Index(v, "-") > 0 {
+					c.clientlang = strings.ToLower(v)
+					return c.confData.Lang.Lang(key, c.clientlang)
+				}
+			}
+		}
+	}
+	return c.confData.Lang.Lang(key, c.clientlang)
 }
 
 // 绑定数据

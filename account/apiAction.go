@@ -21,7 +21,7 @@ func loginByPassAction(c *core.GContent) {
 		return
 	}
 	if parmas.Name == "" || parmas.Pass == "" {
-		c.FailJson(403, "参数错误")
+		c.FailJson(403, c.Lang("client_param_error"))
 		return
 	}
 	ub := &model.UserBind{}
@@ -59,7 +59,7 @@ func registerAction(c *core.GContent) {
 		return
 	}
 	if parmas.Name == "" || parmas.Pass == "" || parmas.Code == "" {
-		c.FailJson(403, "参数错误")
+		c.FailJson(403, c.Lang("client_param_error"))
 		return
 	}
 
@@ -84,7 +84,7 @@ func registerAction(c *core.GContent) {
 		bindType = TYPE_EMAIL
 		disname = utils.HideEmail(parmas.Name)
 	} else {
-		c.FailJson(403, "参数错误")
+		c.FailJson(403, c.Lang("client_param_error"))
 		return
 	}
 	sign := utils.RandStr(16)
@@ -133,7 +133,7 @@ func changePassAction(c *core.GContent) {
 		return
 	}
 	if parmas.OldPass == "" || parmas.Pass == "" {
-		c.FailJson(403, "参数错误")
+		c.FailJson(403, c.Lang("client_param_error"))
 		return
 	}
 	if parmas.OldPass == parmas.Pass {
@@ -244,7 +244,7 @@ type sendCodeParam struct {
 func sendCodeAction(c *core.GContent) {
 	p := &sendCodeParam{}
 	if e := c.BindJson(p); e != nil {
-		c.FailJson(403, "参数错误")
+		c.FailJson(403, c.Lang("client_param_error"))
 		return
 	}
 	if utils.IsEmail(p.Name) {
@@ -269,7 +269,7 @@ type apiCashLogActionParam struct {
 func apiCashLogAction(c *core.GContent) {
 	p := &apiCashLogActionParam{}
 	if e := c.BindJson(p); e != nil {
-		c.FailJson(403, "参数错误")
+		c.FailJson(403, c.Lang("client_param_error"))
 		return
 	}
 	slist := []model.UserCash{}
@@ -307,7 +307,7 @@ func apiCashLogAction(c *core.GContent) {
 func apiUserAddrListAction(c *core.GContent) {
 	p := &core.PageParam{}
 	if e := c.BindJson(p); e != nil {
-		c.FailJson(403, "参数错误")
+		c.FailJson(403, c.Lang("client_param_error"))
 		return
 	}
 	list := []model.UserAddr{}
@@ -323,7 +323,7 @@ func apiUserAddrListAction(c *core.GContent) {
 func apiUserAddrSaveAction(c *core.GContent) {
 	p := &model.UserAddr{}
 	if e := c.BindJson(p); e != nil || p.Address == "" || p.Mobile == "" || p.City == "" || p.Province == "" || p.District == "" || p.Consignee == "" {
-		c.FailJson(403, "参数错误")
+		c.FailJson(403, c.Lang("client_param_error"))
 		return
 	}
 	if p.IsDefault == 1 {

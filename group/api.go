@@ -109,7 +109,7 @@ func apiGroupMoveItemAction(c *core.GContent) {
 	// 	p.PageSize = 10
 	// }
 	// if p.Id < 1 {
-	// 	c.FailJson(403, "参数错误")
+	// 	c.FailJson(403, c.Lang("client_param_error"))
 	// 	return
 	// }
 	// c.SuccessJson(GroupItems(c, c.GetUserID(), p.Id, p.Page, p.PageSize))

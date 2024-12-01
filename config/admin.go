@@ -21,7 +21,7 @@ func admimGetConfigAction(c *core.GContent) {
 func adminSetConfigAction(c *core.GContent) {
 	p := &adminActionParam{}
 	if e := c.BindJson(p); e != nil || p.Key == "" {
-		c.FailJson(403, "参数错误")
+		c.FailJson(403, c.Lang("client_param_error"))
 		return
 	}
 	if SetConfigRoot(c, p.Key, p.Data) {
