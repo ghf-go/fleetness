@@ -27,7 +27,7 @@ func apiGroupSaveAction(c *core.GContent) {
 		return
 	}
 	if e := GroupSave(c, p); e != nil {
-		c.FailJson(403, e.Error())
+		c.FailJson(403, c.Lang("save_fail"))
 		return
 	}
 	c.SuccessJson("success")
@@ -59,7 +59,7 @@ func apiGroupAddItemAction(c *core.GContent) {
 		return
 	}
 	if e := GroupItemAdd(c, c.GetUserID(), p.Id, p.TargetIds...); e != nil {
-		c.FailJson(403, e.Error())
+		c.FailJson(403, c.Lang("save_fail"))
 		return
 	}
 	c.SuccessJson("success")
@@ -78,7 +78,7 @@ func apiGroupDelItemAction(c *core.GContent) {
 		return
 	}
 	if e := GroupItemDel(c, c.GetUserID(), p.Id, p.TargetIds...); e != nil {
-		c.FailJson(403, e.Error())
+		c.FailJson(403, c.Lang("save_fail"))
 		return
 	}
 	c.SuccessJson("success")

@@ -9,7 +9,7 @@ import (
 func apiFeedBackSendAction(c *core.GContent) {
 	p := &model.Feedback{}
 	if e := c.BindJson(p); e != nil {
-		c.FailJson(403, e.Error())
+		c.FailJson(403, c.Lang("client_param_error"))
 		return
 	}
 	p.CreateIP = c.GetIP()
@@ -29,7 +29,7 @@ type apiFeedBackListParam struct {
 func apiFeedBackListAction(c *core.GContent) {
 	p := &apiFeedBackListParam{}
 	if e := c.BindJson(p); e != nil {
-		c.FailJson(403, e.Error())
+		c.FailJson(403, c.Lang("client_param_error"))
 		return
 	}
 	if p.Page <= 0 {

@@ -168,7 +168,7 @@ type bindAccountParams struct {
 func bindAccountAction(c *core.GContent) {
 	p := &bindAccountParams{}
 	if e := c.BindJson(p); e != nil {
-		c.FailJson(403, e.Error())
+		c.FailJson(403, c.Lang("client_param_error"))
 		return
 	}
 	if p.BindType == TYPE_EMAIL || p.BindType == TYPE_MOBILE {
@@ -210,7 +210,7 @@ func getUserInfoAction(c *core.GContent) {
 func setUserInfoAction(c *core.GContent) {
 	p := map[string]string{}
 	if e := c.BindJson(&p); e != nil {
-		c.FailJson(403, e.Error())
+		c.FailJson(403, c.Lang("client_param_error"))
 		return
 	}
 	uid := c.GetUserID()

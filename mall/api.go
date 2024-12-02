@@ -10,7 +10,7 @@ type apiCateListActionParam struct {
 func apiGoodsDetailAction(c *core.GContent) {
 	p := &apiCateListActionParam{}
 	if e := c.BindJson(p); e != nil {
-		c.FailJson(403, e.Error())
+		c.FailJson(403, c.Lang("client_param_error"))
 		return
 	}
 	if r := GetGoodsDetail(c, p.ID); r != nil {
@@ -30,7 +30,7 @@ func apiCateListAction(c *core.GContent) {
 func apiGoodsListAction(c *core.GContent) {
 	p := &GetGoodsListQuery{}
 	if e := c.BindJson(p); e != nil {
-		c.FailJson(403, e.Error())
+		c.FailJson(403, c.Lang("client_param_error"))
 		return
 	}
 	c.SuccessJson(GetGoodsList(c, p))

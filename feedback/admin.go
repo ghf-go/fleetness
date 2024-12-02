@@ -17,7 +17,7 @@ type adminFeedListActionParam struct {
 func adminFeedListAction(c *core.GContent) {
 	p := &adminFeedListActionParam{}
 	if e := c.BindJson(p); e != nil {
-		c.FailJson(403, e.Error())
+		c.FailJson(403, c.Lang("client_param_error"))
 		return
 	}
 	if p.Page <= 0 {
@@ -44,7 +44,7 @@ type adminFeedBackReplayParam struct {
 func adminFeedBackReplayAction(c *core.GContent) {
 	p := &adminFeedBackReplayParam{}
 	if e := c.BindJson(p); e != nil {
-		c.FailJson(403, e.Error())
+		c.FailJson(403, c.Lang("client_param_error"))
 		return
 	}
 	if p.ID == 0 || p.Content == "" {

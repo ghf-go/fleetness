@@ -82,7 +82,7 @@ func apiSendAction(c *core.GContent) {
 		}
 		return nil, ""
 	}); e != nil {
-		c.FailJson(403, e.Error())
+		c.FailJson(403, c.Lang("save_fail"))
 		return
 	}
 	c.SuccessJson("success")
