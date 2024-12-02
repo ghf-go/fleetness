@@ -28,6 +28,9 @@ func getCahce(c *core.GContent) *redis.Client {
 
 func Init(api, admin, command *core.WebRouter) {
 	isOnline = true
+	ag := api.Group("news", core.ApiCheckoutLoginMiddleWare)
+	ag.Post("list", apiNewsListAction)
+	ag.Post("detail", apiNewsDetailAction)
 
 	adg := admin.Group("news", core.ApiCheckoutLoginMiddleWare)
 	adg.Post("list", adminNewsListAction)
