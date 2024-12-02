@@ -13,7 +13,7 @@ type apiGroupListActionParam struct {
 func apiGroupListAction(c *core.GContent) {
 	p := &apiGroupListActionParam{}
 	if e := c.BindJson(p); e != nil {
-		c.FailJson(403, e.Error())
+		c.FailJson(403, c.Lang("client_param_error"))
 		return
 	}
 	c.SuccessJson(GroupList(c, c.GetUserID(), p.TargetType))
@@ -23,7 +23,7 @@ func apiGroupListAction(c *core.GContent) {
 func apiGroupSaveAction(c *core.GContent) {
 	p := &model.Group{}
 	if e := c.BindJson(p); e != nil {
-		c.FailJson(403, e.Error())
+		c.FailJson(403, c.Lang("client_param_error"))
 		return
 	}
 	if e := GroupSave(c, p); e != nil {
@@ -41,7 +41,7 @@ type apiGroupDelActionParam struct {
 func apiGroupDelAction(c *core.GContent) {
 	p := &apiGroupDelActionParam{}
 	if e := c.BindJson(p); e != nil {
-		c.FailJson(403, e.Error())
+		c.FailJson(403, c.Lang("client_param_error"))
 		return
 	}
 	if GroupDel(c, c.GetUserID(), p.ID) {
@@ -55,7 +55,7 @@ func apiGroupDelAction(c *core.GContent) {
 func apiGroupAddItemAction(c *core.GContent) {
 	p := &apiGroupDelItemActionParams{}
 	if e := c.BindJson(p); e != nil {
-		c.FailJson(403, e.Error())
+		c.FailJson(403, c.Lang("client_param_error"))
 		return
 	}
 	if e := GroupItemAdd(c, c.GetUserID(), p.Id, p.TargetIds...); e != nil {
@@ -74,7 +74,7 @@ type apiGroupDelItemActionParams struct {
 func apiGroupDelItemAction(c *core.GContent) {
 	p := &apiGroupDelItemActionParams{}
 	if e := c.BindJson(p); e != nil {
-		c.FailJson(403, e.Error())
+		c.FailJson(403, c.Lang("client_param_error"))
 		return
 	}
 	if e := GroupItemDel(c, c.GetUserID(), p.Id, p.TargetIds...); e != nil {
@@ -97,7 +97,7 @@ type apiGroupMoveItemActionParam struct {
 func apiGroupMoveItemAction(c *core.GContent) {
 	p := &apiGroupMoveItemActionParam{}
 	if e := c.BindJson(p); e != nil {
-		c.FailJson(403, e.Error())
+		c.FailJson(403, c.Lang("client_param_error"))
 		return
 	}
 	GroupItemMove(c, c.GetUserID(), p.OldID, p.NewID, p.TargetIds...)

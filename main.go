@@ -17,6 +17,7 @@ import (
 	"github.com/ghf-go/fleetness/feed"
 	"github.com/ghf-go/fleetness/feedback"
 	"github.com/ghf-go/fleetness/follow"
+	"github.com/ghf-go/fleetness/friendlinks"
 	"github.com/ghf-go/fleetness/group"
 	"github.com/ghf-go/fleetness/lottery"
 	"github.com/ghf-go/fleetness/message"
@@ -65,6 +66,7 @@ func main() {
 	appbuild.Init(apigrp, admingrp, nil)
 	category.Init(apigrp, admingrp, nil)
 	news.Init(apigrp, admingrp, nil)
+	friendlinks.Init(apigrp, admingrp, nil)
 	// ge.AddAfterJob("测试每个5秒运行一次", 5, func(c *core.GContent) {
 	// 	core.AppDebug("测试每个5秒运行一次")
 	// })

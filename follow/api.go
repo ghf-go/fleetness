@@ -17,7 +17,7 @@ type followParam struct {
 func apiFollowAction(c *core.GContent) {
 	p := &followParam{}
 	if e := c.BindJson(p); e != nil {
-		c.FailJson(403, e.Error())
+		c.FailJson(403, c.Lang("client_param_error"))
 		return
 	}
 	fm := &model.FollowItem{}
@@ -74,7 +74,7 @@ func apiFollowAction(c *core.GContent) {
 func apiUnFollowAction(c *core.GContent) {
 	p := &followParam{}
 	if e := c.BindJson(p); e != nil {
-		c.FailJson(403, e.Error())
+		c.FailJson(403, c.Lang("client_param_error"))
 		return
 	}
 	fm := &model.FollowItem{}
@@ -115,7 +115,7 @@ type followListParam struct {
 func apiFollowListAction(c *core.GContent) {
 	p := &followListParam{}
 	if e := c.BindJson(p); e != nil {
-		c.FailJson(403, e.Error())
+		c.FailJson(403, c.Lang("client_param_error"))
 		return
 	}
 	if p.ID == 0 {
@@ -137,7 +137,7 @@ func apiFollowListAction(c *core.GContent) {
 func apiFollowFanAction(c *core.GContent) {
 	p := &followListParam{}
 	if e := c.BindJson(p); e != nil {
-		c.FailJson(403, e.Error())
+		c.FailJson(403, c.Lang("client_param_error"))
 		return
 	}
 	if p.ID == 0 {
