@@ -11,7 +11,7 @@ type adminActionParam struct {
 func admimGetConfigAction(c *core.GContent) {
 	p := &adminActionParam{}
 	if e := c.BindJson(p); e != nil || p.Key == "" {
-		c.FailJson(403, "参数错误"+e.Error())
+		c.FailJson(403, c.Lang("client_param_error"))
 		return
 	}
 	c.SuccessJson(GetConfigRoot(c, p.Key, p.Data))

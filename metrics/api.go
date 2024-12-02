@@ -46,7 +46,7 @@ type apiUploadActionParam struct {
 func apiUploadAction(c *core.GContent) {
 	p := &apiUploadActionParam{}
 	if e := c.BindJson(p); e != nil {
-		c.FailJson(403, "参数错误"+e.Error())
+		c.FailJson(403, c.Lang("client_param_error"))
 		return
 	}
 	db := getDB(c)

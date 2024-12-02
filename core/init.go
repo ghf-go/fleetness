@@ -25,6 +25,7 @@ const (
 	TARGET_TYPE_USER    = 1
 	TARGET_TYPE_FEED    = 2
 	TARGET_TYPE_COMMENT = 3
+	TARGET_TYPE_NEWS    = 4
 )
 
 // 记录系统日志

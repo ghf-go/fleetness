@@ -8,6 +8,7 @@ import (
 	"github.com/ghf-go/fleetness/appbuild"
 	"github.com/ghf-go/fleetness/appver"
 	"github.com/ghf-go/fleetness/blocklist"
+	"github.com/ghf-go/fleetness/category"
 	"github.com/ghf-go/fleetness/comment"
 	"github.com/ghf-go/fleetness/config"
 	"github.com/ghf-go/fleetness/core"
@@ -61,6 +62,7 @@ func main() {
 	metrics.Init(apigrp, admingrp, nil)
 	appver.Init(apigrp, admingrp, nil)
 	appbuild.Init(apigrp, admingrp, nil)
+	category.Init(apigrp, admingrp, nil)
 	// ge.AddAfterJob("测试每个5秒运行一次", 5, func(c *core.GContent) {
 	// 	core.AppDebug("测试每个5秒运行一次")
 	// })
