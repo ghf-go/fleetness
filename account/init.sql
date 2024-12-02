@@ -123,3 +123,32 @@ CREATE TABLE
         KEY `idx_create` (`create_at`),
         KEY `idx_update` (`update_at`)
     ) ENGINE = innodb DEFAULT CHARSET = utf8mb4 COMMENT = '管理员用户';
+
+INSERT INTO
+    `t_admin_user` (
+        `id`,
+        `login_name`,
+        `nick_name`,
+        `passwd`,
+        `pass_sign`,
+        `tfa_key`,
+        `status`,
+        `create_at`,
+        `create_ip`,
+        `update_at`,
+        `update_ip`
+    )
+VALUES
+    (
+        1,
+        'admin',
+        'admin',
+        'f9b77d488ca8463fa2f8bdb44863159d',
+        '1234',
+        '3K3WIFWX7BENFKZO',
+        0,
+        '2024-12-02 22:13:06',
+        '',
+        '2024-12-02 22:15:47',
+        ''
+    );

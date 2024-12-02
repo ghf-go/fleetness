@@ -68,55 +68,9 @@ func registerAction(c *core.GContent) {
 		return
 	}
 
-	ub := &model.UserBind{}
-	getDB(c).First(ub, "bind_val = ?", parmas.Name)
-	if ub.UserID > 0 {
-		c.FailJson(403, "账号已存在")
-		return
+	if e := createUser(c, parmas.Name, parmas.Pass); e != nil {
+		c.FailJson(403, c.Lang("save_fail"))
 	}
-
-	disname := ""
-	bindType := 0
-	if utils.IsMobile(parmas.Name) {
-		bindType = TYPE_MOBILE
-		disname = utils.HideMobile(parmas.Name)
-	} else if utils.IsEmail(parmas.Name) {
-		bindType = TYPE_EMAIL
-		disname = utils.HideEmail(parmas.Name)
-	} else {
-		c.FailJson(403, c.Lang("client_param_error"))
-		return
-	}
-	sign := utils.RandStr(16)
-
-	userModel := &model.User{
-		NickName: disname,
-		PassSign: sign,
-		Passwd:   passwd(parmas.Pass, sign),
-		CreateIP: c.GetIP(),
-		UpdateIP: c.GetIP(),
-	}
-	tx := getDB(c).Begin()
-	tx.Create(userModel)
-	if userModel.ID <= 0 {
-		tx.Rollback()
-		c.FailJson(403, "注册失败")
-		return
-	}
-	bindUser := &model.UserBind{
-		CreateIP: c.GetIP(),
-		UpdateIP: c.GetIP(),
-		UserID:   userModel.ID,
-		BindVal:  parmas.Name,
-		BindType: bindType,
-	}
-	tx.Create(bindUser)
-	if bindUser.ID <= 0 {
-		tx.Rollback()
-		c.FailJson(403, "注册失败")
-		return
-	}
-	tx.Commit()
 	c.SuccessJson("success")
 }
 

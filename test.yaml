@@ -21,7 +21,6 @@ cache:
     con_max_idle_time: 600
     con_max_life_time: 3600
 
-mq:
 log:
   driver: file
   dirpath:
