@@ -12,7 +12,11 @@
       <el-table-column prop="sub_title" label="父标题" />
       <el-table-column prop="content" label="内容" />
       <el-table-column prop="sub_title" label="父标题" />
-      <el-table-column prop="is_publish" label="是否发布" />
+      <el-table-column prop="is_publish" label="是否发布">
+        <template #default="scope">
+          <YesNo v-model="scope.row.is_publish"></YesNo>
+        </template>
+      </el-table-column>
       <el-table-column prop="author" label="作者" />
       <el-table-column prop="refer" label="引用" />
       <el-table-column prop="create_at" label="时间" />
