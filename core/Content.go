@@ -229,7 +229,7 @@ func (c *GContent) BindJson(obj any) error {
 
 // 接口正常返回
 func (c *GContent) SuccessJson(data any) {
-	c.json(0, "", data)
+	c.json(200, "", data)
 }
 
 // 接口保存信息

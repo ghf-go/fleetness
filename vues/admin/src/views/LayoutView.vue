@@ -10,7 +10,7 @@
         router
       >
         <el-submenu v-for="(item, rk) in menus" :key="rk" :index="item.path">
-          <template slot="title">
+          <template #title>
             <i :class="item.meta.icon"></i>
             <span>{{ item.name }}</span>
           </template>
@@ -28,7 +28,7 @@
     <el-container>
       <el-header class="header">
         <div class="info">
-          <div class="name">{{ $store.state.nick_name }}</div>
+          <div class="name">{{ nickName }}</div>
           <div class="logout" @click="logout">退出登录</div>
         </div>
       </el-header>
@@ -43,6 +43,7 @@
 export default {
   data() {
     return {
+      nickName: sessionStorage.getItem("nick_name"),
       menuActive: "",
       menus: [],
     };
@@ -62,9 +63,9 @@ export default {
   },
   methods: {
     async logout() {
-      await this.$post("/index/logout", {});
-      this.$store.commit("clear");
-      sessionStorage.removeItem("store");
+      await this.$post("/logout", {});
+      sessionStorage.removeItem("nick_name");
+      sessionStorage.removeItem("token");
       this.$router.replace("/login");
     },
   },

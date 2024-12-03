@@ -7,11 +7,7 @@
         type="text"
         placeholder="请输入账号"
       />
-      <input
-        v-model="reqData.passwd"
-        type="password"
-        placeholder="请输入密码"
-      />
+      <input v-model="reqData.pass" type="password" placeholder="请输入密码" />
       <input v-model="reqData.code" placeholder="验证码" />
       <button @click="login">登录</button>
     </div>
@@ -22,19 +18,21 @@
 export default {
   data() {
     return {
-      topath: window.localStorage.getItem("to_path"),
+      topath: window.sessionStorage.getItem("to_path"),
       reqData: {
         login_name: "",
-        passwd: "",
+        pass: "",
         code: "",
       },
     };
   },
   mounted() {
-    // const data = { scope: "rwerrwer", deadline: 1721123605 };
-    // base64.encode();
-    // this.$CryptoJS.HmacSHA1();
-    if (this.$store.state.admin_id > 0) {
+    // console.log(
+    //   "asd",
+    //   window.sessionStorage.getItem("nick_name"),
+    //   window.sessionStorage.getItem("token")
+    // );
+    if (window.sessionStorage.getItem("nick_name")) {
       this.goPath();
     }
   },
@@ -48,20 +46,19 @@ export default {
     },
     async login() {
       if (this.reqData.login_name == "") {
-        this.$message("请输入登录用户名");
+        this.$message.error("请输入登录用户名");
         return;
-      } else if (this.reqData.passwd == "") {
-        this.$message("请输入密码");
+      } else if (this.reqData.pass == "") {
+        this.$message.error("请输入密码");
         return;
       }
-      const data = await this.$post("/index/login", this.reqData);
+      const data = await this.$api("/login", this.reqData);
+      console.log("login ", data, data.msg);
       if (data.code == 200) {
-        console.log(data);
-        this.$store.commit("setUserInfo", data.data);
-        sessionStorage.setItem("store", JSON.stringify(data.data));
+        sessionStorage.setItem("nick_name", data.data.nick_name);
         this.goPath();
       } else {
-        this.$message(data.msg);
+        this.$message.error(data.msg);
       }
     },
   },

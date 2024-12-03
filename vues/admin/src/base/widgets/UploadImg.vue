@@ -30,10 +30,10 @@ export default {
       this.$emit("update:modelValue", e.url);
     },
 
-    changeFile(f) {
+    async changeFile(f) {
       if (f.status == "ready") {
         this.$api("/upload/getToken", {
-          key: this.$filemd5(f),
+          key: await this.$filemd5(f),
           file_name: f.name,
         }).then((r) => {
           if (r.code != 200) {

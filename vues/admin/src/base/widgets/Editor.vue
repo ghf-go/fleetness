@@ -1,5 +1,12 @@
 <template>
   <div class="g-editor">
+    <input
+      accept="image/*"
+      ref="mfiles"
+      type="file"
+      style="display: none"
+      @change="fileChange"
+    />
     <div ref="header" class="header">
       <span class="ql-formats">
         <select class="ql-font"></select>
@@ -46,14 +53,9 @@
       </span>
     </div>
 
-    <div class="body" ref="Content"></div>
-    <input
-      accept="image/*"
-      ref="mfiles"
-      type="file"
-      style="display: none"
-      @change="fileChange"
-    />
+    <div class="body" ref="editor_quill">
+      <div v-html="modelValue"></div>
+    </div>
   </div>
 </template>
 
@@ -65,11 +67,11 @@ import "quill/dist/quill.core.css";
 import "quill/dist/quill.bubble.css";
 import "quill/dist/quill.snow.css";
 export default {
+  name: "Editor",
   props: ["modelValue"],
   emits: ["update:modelValue"],
   data() {
     return {
-      contentHtml: "",
       quill: null,
       editorConf: {
         readOnly: false,
@@ -87,19 +89,25 @@ export default {
   mounted() {
     this.initEditor();
   },
-  beforeDestroy() {
-    this.quill = null;
-    delete this.quill;
-  },
+  // beforeUnmount() {
+  //   this.quill = null;
+  //   delete this.quill;
+  // },
+
   methods: {
-      fileChange(f) {
-        var _this = this
-          this.$uploadFile(f, sucfunc(url){
-            const range = _this.quill.getSelection();
-            if (range) {
-              _this.quill.insertEmbed(range.index, "image", url);
-              _this.quill.setSelection(range.index + 1);
-          })
+    fileChange(e) {
+      const _this = this;
+      this.$uploadFile(e.target.files[0], (url) => {
+        this.$nextTick(() => {
+          _this.quill.insertEmbed(1, "image", url);
+          console.log("插入图片", url, _this.quill.Target);
+          // const range = _this.quill.getSelection();
+          // if (range) {
+          //   _this.quill.insertEmbed(range.index, "image", url);
+          //   _this.quill.setSelection(range.index + 1);
+          // }
+        });
+      });
     },
     //初始化编辑器
     initEditor() {
@@ -107,18 +115,20 @@ export default {
       this.editorConf.modules.toolbar.handlers.image = () => {
         this.$refs.mfiles.click();
       };
-      this.quill = new Quill(this.$refs.Content, this.editorConf);
-      this.$refs.Content.children[0].innerHTML = this.modelValue;
+      Quill.debug("info");
+      this.quill = new Quill(this.$refs.editor_quill, this.editorConf);
+      // this.quill.enable(false);
+      // this.quill.setContents(this.modelValue);
       this.quill.enable(true);
 
-      this.quill.on("text-change", () => {
-        let html = this.$refs.Content.children[0].innerHTML;
-        const quill = this.quill;
-        const text = this.quill.getText();
-        if (html === "<p><br></p>") html = "";
-        this.$emit("update:modelValue", html);
-      });
-      this.$emit("ready", this.quill);
+      // this.quill.setContents(this.modelValue);
+
+      // this.quill.on("text-change", () => {
+      //   let html = this.$refs.Content.children[0].innerHTML;
+      //   const text = this.quill.getText();
+      //   if (html === "<p><br></p>") html = "";
+      //   this.$emit("update:modelValue", html);
+      // });
     },
   },
 };

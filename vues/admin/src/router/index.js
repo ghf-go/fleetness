@@ -1,25 +1,56 @@
-import { createRouter, createWebHashHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
+import { createRouter, createWebHashHistory } from "vue-router";
 
 const routes = [
   {
-    path: '/',
-    name: 'home',
-    component: HomeView
+    path: "",
+    redirect: "/account/",
+    meta: {
+      reqauth: false,
+      isMenu: false,
+    },
   },
   {
-    path: '/about',
-    name: 'about',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue')
-  }
-]
+    path: "/account/",
+    name: "用户管理",
+    component: () => import("../views/LayoutView.vue"),
+    meta: {
+      reqauth: true,
+      isMenu: true,
+      icon: "el-icon-s-custom",
+    },
+    children: [
+      {
+        path: "",
+        name: "用户列表",
+        component: () => import("../views/account/Index.vue"),
+        meta: {
+          reqauth: true,
+          isMenu: true,
+        },
+      },
+    ],
+  },
+  {
+    path: "/login",
+    name: "login",
+    component: () => import("../views/LoginView.vue"),
+    meta: {
+      reqauth: false,
+      isMenu: false,
+    },
+  },
+];
 
 const router = createRouter({
   history: createWebHashHistory(),
-  routes
-})
+  routes,
+});
+router.beforeEach((to, from, next) => {
+  if (to.meta.reqauth && window.sessionStorage.getItem("token") == "") {
+    window.localStorage.setItem("to_path", to.fullPath);
+    next("/login");
+  }
+  next();
+});
 
-export default router
+export default router;
