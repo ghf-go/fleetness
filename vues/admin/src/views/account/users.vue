@@ -1,11 +1,41 @@
 <template>
   <div>
-    <!-- <UploadImg v-model="img" style="width: 100px; height: 100px"></UploadImg> -->
-    <UploadImgs v-model="imgs" />
-    <div>{{ imgs }}</div>
-    <!-- <Editor v-model="data"></Editor> -->
-
-    ddd
+    <el-table
+      :data="tableData"
+      border
+      stripe
+      style="width: 100%"
+      :row-class-name="$tableRowClassName"
+    >
+      <el-table-column prop="id" label="ID" />
+      <el-table-column prop="nick_name" label="昵称" />
+      <el-table-column prop="avatar" label="头像" />
+      <el-table-column prop="create_at" label="注册时间" />
+      <el-table-column prop="create_ip" label="注册IP" />
+      <el-table-column label="操作" fixed="right">
+        <template #default="scope">
+          <el-button
+            link
+            type="primary"
+            size="small"
+            @click.prevent="deleteRow(scope.$index)"
+          >
+            Remove
+          </el-button>
+        </template>
+      </el-table-column>
+    </el-table>
+    <el-pagination
+      style="margin-top: 1rem"
+      v-model:current-page="queryData.page"
+      v-model:page-size="queryData.page_size"
+      :page-sizes="[10, 20, 50, 100]"
+      layout="total, sizes, prev, pager, next, jumper"
+      :total="totalRow"
+      background
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
+    />
   </div>
 </template>
 
@@ -13,10 +43,36 @@
 export default {
   data() {
     return {
-      img: "",
-      imgs: "",
-      data: "<p>123</p>",
+      tableData: [],
+      totalRow: 0,
+      queryData: {
+        page: 1,
+        page_size: 20,
+      },
     };
+  },
+  mounted() {
+    this.loadData();
+  },
+  methods: {
+    handleSizeChange(pp) {
+      this.queryData.page_size = pp;
+      this.queryData.page = 1;
+      this.loadData();
+    },
+    handleCurrentChange(pp) {
+      this.queryData.page = pp;
+      this.loadData();
+    },
+    async loadData() {
+      const data = await this.$api("/account/user_list", this.queryData);
+      if (data.code != 200) {
+        this.$message.error(data.msg);
+      } else {
+        this.tableData = data.data.list;
+        this.totalRow = data.data.total;
+      }
+    },
   },
 };
 </script>

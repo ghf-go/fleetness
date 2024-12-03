@@ -1,8 +1,7 @@
 export default function (item, rowIndex) {
-  if (rowIndex === 1) {
+  if (rowIndex % 2 == 0) {
     return "warning-row";
-  } else if (rowIndex === 3) {
+  } else {
     return "success-row";
   }
-  return "";
 }

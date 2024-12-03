@@ -11,10 +11,10 @@ export default {
       chart: {},
     };
   },
-  model: { prop: "value" },
-  props: ["value"],
+  props: ["modelValue"],
+  emits: ["update:modelValue"],
   watch: {
-    value(newVal, ov) {
+    modelValue(newVal, ov) {
       console.log(ov);
       this.chart.setOption(newVal);
     },
@@ -22,7 +22,7 @@ export default {
 
   mounted() {
     this.chart = echarts.init(this.$refs.chart);
-    this.chart.setOption(this.value);
+    this.chart.setOption(this.modelValue);
   },
 };
 </script>
