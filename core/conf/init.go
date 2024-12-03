@@ -8,6 +8,6 @@ type Conf struct {
 	Stmp    map[string]smtpConfig  `yaml:"smtp"`
 	Payment PaymentConfig          `yaml:"payment"`
 	Lang    langConf               `yaml:"lang"`
-	Storage storageConfig          `yaml:"storage"`
+	Storage StorageConfig          `yaml:"storage"`
 	Meta    MetaConf               `yaml:"meta"`
 }

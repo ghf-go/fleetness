@@ -21,6 +21,14 @@ cache:
     con_max_idle_time: 600
     con_max_life_time: 3600
 
+storage:
+  driver: "qiniu"
+  cnd_host: "https://s.yishengxiangban.cn/"
+  ak: "H2dzARlx5pXHkyzF9yi86tjIqFMgA9fLy7G1cSYJ"
+  sk: "C37ufM-6TTs6-3ukULhuJ1yxZV3h5cMApNbWx5Pr"
+  bucket: "yishengxiangban"
+  upload_host: "http://up-z1.qiniu.com/"
+
 log:
   driver: file
   dirpath:
