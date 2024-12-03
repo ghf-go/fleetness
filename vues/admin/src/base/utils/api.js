@@ -64,7 +64,9 @@ const api = {
     fr.onload = (e) => {
       const data = api
         .apiPost("/upload/getToken", {
-          key: CryptoJS.MD5(e.target.result).toString(),
+          key: CryptoJS.MD5(
+            CryptoJS.lib.WordArray.create(e.target.result)
+          ).toString(),
           file_name: f.name,
         })
         .then((data) => {

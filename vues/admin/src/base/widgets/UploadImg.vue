@@ -27,6 +27,8 @@ export default {
   },
   methods: {
     handleAvatarSuccess(e) {
+      this.$api("/upload/uploadSuccess", e);
+
       this.$emit("update:modelValue", e.url);
     },
 

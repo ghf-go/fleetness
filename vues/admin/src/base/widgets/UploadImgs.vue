@@ -60,6 +60,8 @@ export default {
       }
     },
     handleAvatarSuccess(e) {
+      console.log("上传完成", e);
+      this.$api("/upload/uploadSuccess", e);
       this.getImgs(e.url);
     },
     async changeFile(f) {
