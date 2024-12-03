@@ -2,6 +2,7 @@
   <div>
     <UploadImg v-model="img" style="width: 100px; height: 100px"></UploadImg>
     <Editor v-model="data"></Editor>
+
     ddd
   </div>
 </template>

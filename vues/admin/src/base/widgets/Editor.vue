@@ -98,14 +98,15 @@ export default {
     fileChange(e) {
       const _this = this;
       this.$uploadFile(e.target.files[0], (url) => {
+        _this.quill.focus();
         this.$nextTick(() => {
-          _this.quill.insertEmbed(1, "image", url);
-          console.log("插入图片", url, _this.quill.Target);
-          // const range = _this.quill.getSelection();
-          // if (range) {
-          //   _this.quill.insertEmbed(range.index, "image", url);
-          //   _this.quill.setSelection(range.index + 1);
-          // }
+          _this.quill.focus();
+          console.log("插入图片", url, _this.quill);
+          const range = _this.quill.getSelection();
+          if (range) {
+            _this.quill.insertEmbed(range.index, "image", url);
+            _this.quill.setSelection(range.index + 1);
+          }
         });
       });
     },

@@ -11,7 +11,7 @@ instanceAxios.interceptors.response.use(
       sessionStorage.removeItem("nick_name");
       sessionStorage.removeItem("token");
       router.replace("/login");
-      return;
+      return response.data;
     }
     return response.data;
   },

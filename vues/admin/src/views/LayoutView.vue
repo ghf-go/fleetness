@@ -9,9 +9,8 @@
         active-text-color="#FFF"
         router
       >
-        <el-submenu v-for="(item, rk) in menus" :key="rk" :index="item.path">
+        <el-sub-menu v-for="(item, rk) in menus" :key="rk" :index="item.path">
           <template #title>
-            <i :class="item.meta.icon"></i>
             <span>{{ item.name }}</span>
           </template>
           <el-menu-item
@@ -22,7 +21,7 @@
           >
             {{ sub.name }}
           </el-menu-item>
-        </el-submenu>
+        </el-sub-menu>
       </el-menu>
     </el-aside>
     <el-container>
@@ -62,8 +61,7 @@ export default {
     console.log(this.$route, this.$router);
   },
   methods: {
-    async logout() {
-      await this.$post("/logout", {});
+    logout() {
       sessionStorage.removeItem("nick_name");
       sessionStorage.removeItem("token");
       this.$router.replace("/login");
