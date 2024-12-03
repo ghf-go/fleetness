@@ -32,7 +32,9 @@
         </div>
       </el-header>
       <el-main class="main">
-        <router-view />
+        <transition name="el-zoom-in-center">
+          <router-view />
+        </transition>
       </el-main>
     </el-container>
   </el-container>
