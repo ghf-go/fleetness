@@ -1,4 +1,4 @@
-import { MD5 } from "crypto-js";
+import CryptoJS from "crypto-js";
 import axios from "axios";
 import router from "@/router";
 const instanceAxios = axios.create();
@@ -45,8 +45,12 @@ const api = {
     return new Promise((resolve, reject) => {
       const fr = new FileReader();
       fr.onload = (e) => {
-        console.log("fileMd5", MD5(e.target.result).toString());
-        resolve(MD5(e.target.result).toString());
+        console.log("fileMd5", e);
+        resolve(
+          CryptoJS.MD5(
+            CryptoJS.lib.WordArray.create(e.target.result)
+          ).toString()
+        );
       };
       fr.onerror = (e) => {
         console.log("fileMd5 失败", e);
@@ -60,7 +64,7 @@ const api = {
     fr.onload = (e) => {
       const data = api
         .apiPost("/upload/getToken", {
-          key: MD5(e.target.result).toString(),
+          key: CryptoJS.MD5(e.target.result).toString(),
           file_name: f.name,
         })
         .then((data) => {

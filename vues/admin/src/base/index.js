@@ -1,6 +1,7 @@
 import api from "./utils/api";
 import Editor from "./widgets/Editor.vue";
 import UploadImg from "././widgets/UploadImg.vue";
+import UploadImgs from "././widgets/UploadImgs.vue";
 import Echarts from "././widgets/Echarts.vue";
 import tablerowclassName from "./utils/tablerowclassName";
 export default {
@@ -12,5 +13,6 @@ export default {
     app.component("Editor", Editor);
     app.component("Echarts", Echarts);
     app.component("UploadImg", UploadImg);
+    app.component("UploadImgs", UploadImgs);
   },
 };

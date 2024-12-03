@@ -1,7 +1,9 @@
 <template>
   <div>
-    <UploadImg v-model="img" style="width: 100px; height: 100px"></UploadImg>
-    <Editor v-model="data"></Editor>
+    <!-- <UploadImg v-model="img" style="width: 100px; height: 100px"></UploadImg> -->
+    <UploadImgs v-model="imgs" />
+    <div>{{ imgs }}</div>
+    <!-- <Editor v-model="data"></Editor> -->
 
     ddd
   </div>
@@ -12,6 +14,7 @@ export default {
   data() {
     return {
       img: "",
+      imgs: "",
       data: "<p>123</p>",
     };
   },
