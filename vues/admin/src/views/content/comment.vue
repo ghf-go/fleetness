@@ -8,6 +8,11 @@
       :row-class-name="$tableRowClassName"
     >
       <el-table-column prop="id" label="ID" />
+      <el-table-column label="账号">
+        <template #default="scope">
+          <UserInfo v-model="scope.row.user_info" />
+        </template>
+      </el-table-column>
       <el-table-column prop="content" label="内容" />
       <el-table-column prop="user_id" label="用户" />
       <el-table-column prop="create_at" label="时间" />

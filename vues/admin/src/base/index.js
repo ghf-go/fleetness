@@ -5,6 +5,8 @@ import UploadImgs from "././widgets/UploadImgs.vue";
 import Echarts from "././widgets/Echarts.vue";
 import tablerowclassName from "./utils/tablerowclassName";
 import YesNo from "./widgets/YesNo.vue";
+import Imgs from "./widgets/Imgs.vue";
+import UserInfo from "./widgets/UserInfo.vue";
 export default {
   install(app, options) {
     app.config.globalProperties.$api = api.apiPost;
@@ -14,6 +16,8 @@ export default {
     app.component("Editor", Editor);
     app.component("Echarts", Echarts);
     app.component("YesNo", YesNo);
+    app.component("Imgs", Imgs);
+    app.component("UserInfo", UserInfo);
     app.component("UploadImg", UploadImg);
     app.component("UploadImgs", UploadImgs);
   },

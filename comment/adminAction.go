@@ -19,7 +19,7 @@ func adminListAction(c *core.GContent) {
 	total := int64(0)
 	getDB(c).Where("status!=?", core.STATUS_DEL).Order("id DESC").Offset(p.GetOffset()).Limit(p.GetPageSize()).Find(&flist)
 	getDB(c).Model(&model.Comment{}).Where("status!=?", core.STATUS_DEL).Count(&total)
-	ret := account.AppendUserBase(c, utils.ModelList2Map(flist), "user_id", "uinfo")
+	ret := account.AppendUserBase(c, utils.ModelList2Map(flist), "user_id", "user_info")
 	c.SuccessJson(map[string]any{
 		"total": total,
 		"list":  ret,
@@ -37,7 +37,7 @@ func adminWaitAuditListAction(c *core.GContent) {
 	total := int64(0)
 	getDB(c).Where("status=?", core.STATUS_WAIT_AUDIT).Order("id DESC").Offset(p.GetOffset()).Limit(p.GetPageSize()).Find(&flist)
 	getDB(c).Model(&model.Comment{}).Where("status=?", core.STATUS_WAIT_AUDIT).Count(&total)
-	ret := account.AppendUserBase(c, utils.ModelList2Map(flist), "user_id", "uinfo")
+	ret := account.AppendUserBase(c, utils.ModelList2Map(flist), "user_id", "user_info")
 	c.SuccessJson(map[string]any{
 		"total": total,
 		"list":  ret,
