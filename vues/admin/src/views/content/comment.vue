@@ -1,5 +1,27 @@
 <template>
   <div>
+    <el-form
+      style="text-align: right"
+      :model="form"
+      ref="queryData"
+      :inline="true"
+      size="normal"
+    >
+      <el-form-item>
+        <el-date-picker
+          v-model="queryData.range_date"
+          type="daterange"
+          start-placeholder="开始时间"
+          end-placeholder="结束时间"
+          range-separator="到"
+          format="YYYY-MM-DD"
+          value-format="YYYY-MM-DD"
+          style="width: 220px"
+        />
+        <el-button plain @click="loadData(1)">搜索</el-button>
+      </el-form-item>
+    </el-form>
+
     <el-table
       :data="tableData"
       border
@@ -39,7 +61,7 @@
       :total="totalRow"
       background
       @size-change="handleSizeChange"
-      @current-change="handleCurrentChange"
+      @current-change="loadData"
     />
   </div>
 </template>
@@ -51,8 +73,11 @@ export default {
       tableData: [],
       totalRow: 0,
       queryData: {
+        id: 0,
+        key: "",
         page: 1,
         page_size: 20,
+        range_date: ["", ""],
       },
     };
   },

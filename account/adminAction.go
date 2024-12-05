@@ -42,7 +42,8 @@ func adminLoginAction(c *core.GContent) {
 }
 
 type adminChangeAdminPassActionParam struct {
-	Passwd string `json:"pass"`
+	Passwd    string `json:"newPass"`
+	OldPasswd string `json:"oldPass"`
 }
 
 // 修改密码
@@ -50,6 +51,12 @@ func adminChangeAdminPassAction(c *core.GContent) {
 	p := &adminChangeAdminPassActionParam{}
 	if e := c.BindJson(p); e != nil || p.Passwd == "" {
 		c.FailJson(403, c.Lang("client_param_error"))
+		return
+	}
+	admUser := &model.AdminUser{}
+	getDB(c).First(admUser, c.GetUserID())
+	if admUser.ID == 0 || passwd(p.OldPasswd, admUser.PassSign) != admUser.Passwd {
+		c.FailJson(403, "账号或者密码错误")
 		return
 	}
 	sign := utils.RandStr(10)

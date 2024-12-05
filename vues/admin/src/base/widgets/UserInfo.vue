@@ -1,6 +1,6 @@
 <template>
   <div class="user_info">
-    <el-image class="avatar" :src="modelValue.avatar" fit="cover"></el-image>
+    <el-avatar :src="modelValue.avatar" fit="cover"></el-avatar>
     <div class="name">{{ modelValue.nick_name }}</div>
   </div>
 </template>
