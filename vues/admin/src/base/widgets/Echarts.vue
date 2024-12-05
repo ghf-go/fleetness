@@ -16,13 +16,29 @@ export default {
   watch: {
     modelValue(newVal, ov) {
       console.log(ov);
-      this.chart.setOption(newVal);
+      this.setOption(newVal);
     },
   },
 
   mounted() {
     this.chart = echarts.init(this.$refs.chart);
-    this.chart.setOption(this.modelValue);
+    this.setOption(this.modelValue);
+  },
+  methods: {
+    setOption(val) {
+      if (val.tooltip.filter0) {
+        val.tooltip.formatter = function (params) {
+          var res = `${params[0].name} <br/>`;
+          for (const item of params) {
+            if (item.value !== 0) {
+              res += `<span style="background: ${item.color}; height:10px; width: 10px; border-radius: 50%;display: inline-block;margin-right:10px;"></span> ${item.seriesName} ：${item.value}<br/>`;
+            }
+          }
+          return res;
+        };
+      }
+      this.chart.setOption(val);
+    },
   },
 };
 </script>
