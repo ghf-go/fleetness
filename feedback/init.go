@@ -24,4 +24,5 @@ func Init(api, admin, command *core.WebRouter) {
 	a := admin.Group("feedback", core.ApiCheckoutLoginMiddleWare)
 	a.Post("send", adminFeedBackReplayAction)
 	a.Post("list", adminFeedListAction)
+
 }

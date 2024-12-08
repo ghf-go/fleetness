@@ -5,12 +5,11 @@
     >
     <el-form
       style="text-align: right"
-      :model="form"
-      ref="queryData"
+      :model="queryData"
       :inline="true"
       size="normal"
     >
-      <el-form-item>
+      <el-form-item style="text-align: right">
         <el-date-picker
           v-model="queryData.range_date"
           type="daterange"

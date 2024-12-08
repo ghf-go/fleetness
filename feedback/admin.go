@@ -3,36 +3,50 @@ package feedback
 import (
 	"time"
 
+	"github.com/ghf-go/fleetness/account"
 	"github.com/ghf-go/fleetness/core"
 	"github.com/ghf-go/fleetness/feedback/model"
 )
 
-type adminFeedListActionParam struct {
-	Page     int  `json:"page"`
-	PageSize int  `json:"page_size"`
-	IsAll    bool `json:"is_all"`
-}
-
-// 获取评论列表
+// 获取意见反馈列表
 func adminFeedListAction(c *core.GContent) {
-	p := &adminFeedListActionParam{}
+	p := &core.PageParam{}
 	if e := c.BindJson(p); e != nil {
 		c.FailJson(403, c.Lang("client_param_error"))
 		return
 	}
-	if p.Page <= 0 {
-		p.Page = 1
-	}
-	if p.PageSize < 1 {
-		p.PageSize = 10
-	}
 	ret := []model.Feedback{}
-	db := getDB(c).Offset((p.Page - 1) * p.PageSize).Limit(p.PageSize).Order("id desc")
-	if !p.IsAll {
-		db = db.Where("is_replay=0")
+	total := int64(0)
+	db := getDB(c)
+	switch p.TabName {
+	case "all":
+		db.Model(&model.Feedback{}).Count(&total)
+		db.Offset((p.Page - 1) * p.PageSize).Limit(p.PageSize).Order("id desc").Find(&ret)
+	case "replyed":
+		db.Model(&model.Feedback{}).Where("is_replay=1").Count(&total)
+		db.Offset((p.Page-1)*p.PageSize).Limit(p.PageSize).Order("id desc").Find(&ret, "is_replay=1")
+	default:
+		db.Model(&model.Feedback{}).Where("is_replay=0").Count(&total)
+		db.Offset((p.Page-1)*p.PageSize).Limit(p.PageSize).Order("id desc").Find(&ret, "is_replay=0")
 	}
-	db.Find(&ret)
-	c.SuccessJson(ret)
+	retList := []map[string]any{}
+	for _, item := range ret {
+		retList = append(retList, map[string]any{
+			"id":             item.ID,
+			"user_id":        item.UserID,
+			"imgs":           item.Imgs,
+			"content":        item.Content,
+			"replay_content": item.ReplayContent,
+			"is_replay":      item.IsReplay,
+			"replay_at":      item.ReplayAt,
+			"create_at":      item.CreateAt,
+			"create_ip":      item.CreateIP,
+		})
+	}
+	c.SuccessJson(map[string]any{
+		"total": total,
+		"list":  account.AppendUserBase(c, retList, "user_id", "user_info"),
+	})
 }
 
 type adminFeedBackReplayParam struct {

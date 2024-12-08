@@ -34,4 +34,5 @@ func Init(api, admin, command *core.WebRouter) {
 	ag := admin.Group("friendlink", core.ApiCheckoutLoginMiddleWare)
 	ag.Post("list", adminFriendLinkListAction)
 	ag.Post("save", adminFriendLinkSaveAction)
+	ag.Post("del", adminFriendLinkDelAction)
 }

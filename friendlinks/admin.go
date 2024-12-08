@@ -12,6 +12,17 @@ func adminFriendLinkListAction(c *core.GContent) {
 	c.SuccessJson(list)
 }
 
+// 删除
+func adminFriendLinkDelAction(c *core.GContent) {
+	p := &core.PageParam{}
+	if e := c.BindJson(p); e != nil || p.ID == 0 {
+		c.FailJson(403, c.Lang("client_param_error"))
+		return
+	}
+	getDB(c).Delete(&model.FriendLinks{}, p.ID)
+	c.SuccessJson("success")
+}
+
 // 保存友情链接
 func adminFriendLinkSaveAction(c *core.GContent) {
 	list := []model.FriendLinks{}

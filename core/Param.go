@@ -12,6 +12,7 @@ type PageParam struct {
 	PageSize  int      `json:"page_size"`
 	RangeDate []string `json:"range_date"`
 	SearchKey string   `json:"key"`
+	TabName   string   `json:"tab"`
 }
 
 // 是否有日期范围
