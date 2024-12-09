@@ -14,6 +14,8 @@ type ApiParam struct {
 	OsVer    string `json:"os_ver"`
 	OsLang   string `json:"os_lang"`
 	ID       uint64 `json:"id"`
+	Page     int    `json:"page"`
+	PageSize int    `json:"page_size"`
 }
 type PageParam struct {
 	ID        uint64   `json:"id"`
@@ -54,5 +56,22 @@ func (p *PageParam) GetPageSize() int {
 	return p.PageSize
 }
 func (p *PageParam) GetOffset() int {
+	return (p.getPage() - 1) * p.GetPageSize()
+}
+
+func (p *ApiParam) getPage() int {
+	if p.Page < 1 {
+		p.Page = 1
+	}
+	return p.Page
+}
+
+func (p *ApiParam) GetPageSize() int {
+	if p.PageSize < 1 {
+		p.PageSize = 10
+	}
+	return p.PageSize
+}
+func (p *ApiParam) GetOffset() int {
 	return (p.getPage() - 1) * p.GetPageSize()
 }

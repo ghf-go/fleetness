@@ -26,6 +26,8 @@ const (
 	TARGET_TYPE_FEED    = 2
 	TARGET_TYPE_COMMENT = 3
 	TARGET_TYPE_NEWS    = 4
+	TARGET_TYPE_NOVEL   = 5
+	TARGET_TYPE_MALL    = 6
 )
 
 // 记录系统日志
