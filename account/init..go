@@ -1,16 +1,39 @@
 package account
 
 import (
+	_ "embed"
+	"strings"
+
 	"github.com/ghf-go/fleetness/core"
 	"github.com/ghf-go/fleetness/core/utils"
 	"github.com/redis/go-redis/v9"
 	"gorm.io/gorm"
 )
 
+//go:embed init.sql
+var initSql string
 var (
 	dbConName    = "default"
 	cacheConName = "default"
+	isOnline     = false
+	isInit       = false
 )
+
+func initDB(c *core.GContent) {
+	if isInit {
+		c.Next()
+		return
+	}
+	lines := strings.Split(initSql, ";")
+	for _, sql := range lines {
+		sql = strings.TrimSpace(sql)
+		if sql != "" {
+			getDB(c).Exec(sql)
+		}
+	}
+	isInit = true
+	c.Next()
+}
 
 const (
 	CASH_SCORE  = "score"
@@ -41,8 +64,9 @@ func passwd(pass, sign string) string {
 }
 
 func Init(api, admin, command *core.WebRouter) {
-	api.Post("login", loginByPassAction)
-	g := api.Group("account", core.ApiCheckoutLoginMiddleWare)
+	isOnline = true
+	api.Post("login", loginByPassAction, initDB)
+	g := api.Group("account", initDB, core.ApiCheckoutLoginMiddleWare)
 	g.Post("register", registerAction)
 	g.Post("changepass", changePassAction)
 	g.Post("upinfo", setUserInfoAction)
@@ -53,8 +77,8 @@ func Init(api, admin, command *core.WebRouter) {
 	g.Post("addrs", apiUserAddrListAction)
 	g.Post("addr_save", apiUserAddrSaveAction)
 
-	admin.Post("login", adminLoginAction)
-	adg := admin.Group("account", core.ApiCheckoutLoginMiddleWare)
+	admin.Post("login", adminLoginAction, initDB)
+	adg := admin.Group("account", initDB, core.ApiCheckoutLoginMiddleWare)
 	adg.Post("changepasswd", adminChangeAdminPassAction)
 	adg.Post("user_add", adminUserAddAction)
 	adg.Post("user_wait_audit", adminUserWaitAuditAction)

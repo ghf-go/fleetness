@@ -1,6 +1,9 @@
 package signin
 
 import (
+	_ "embed"
+	"strings"
+
 	"github.com/ghf-go/fleetness/core"
 	"github.com/redis/go-redis/v9"
 	"gorm.io/gorm"
@@ -10,10 +13,29 @@ var (
 	dbConName    = "default"
 	cacheConName = "default"
 	isOnline     = false
+	isInit       = false
 	days         = 7
 	callHandle   func(uid uint64, sumday, contineday uint)
 )
 
+//go:embed init.sql
+var initSql string
+
+func initDB(c *core.GContent) {
+	if isInit {
+		c.Next()
+		return
+	}
+	lines := strings.Split(initSql, ";")
+	for _, sql := range lines {
+		sql = strings.TrimSpace(sql)
+		if sql != "" {
+			getDB(c).Exec(sql)
+		}
+	}
+	isInit = true
+	c.Next()
+}
 func SetConf(maxday int, handle func(uid uint64, sumday, contineday uint)) {
 	days = maxday
 	callHandle = handle
@@ -34,7 +56,7 @@ func getCache(c *core.GContent) *redis.Client {
 
 func Init(api, admin, command *core.WebRouter) {
 	isOnline = true
-	g := api.Group("signin", core.ApiCheckoutLoginMiddleWare)
+	g := api.Group("signin", initDB, core.ApiCheckoutLoginMiddleWare)
 	g.Post("info", apiSignInfoAction) //签到信息
 	g.Post("sign", apiSignAction)     //签到
 }

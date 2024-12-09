@@ -1,6 +1,9 @@
 package appbuild
 
 import (
+	_ "embed"
+	"strings"
+
 	"github.com/ghf-go/fleetness/core"
 	"github.com/ghf-go/fleetness/core/utils"
 	"github.com/redis/go-redis/v9"
@@ -10,8 +13,29 @@ import (
 var (
 	dbConName    = "default"
 	cacheConName = "default"
+	isOnline     = false
+	isInit       = false
 	platforms    = []string{"server", "VueAdmin", "AppH5"}
 )
+
+//go:embed init.sql
+var initSql string
+
+func initDB(c *core.GContent) {
+	if isInit {
+		c.Next()
+		return
+	}
+	lines := strings.Split(initSql, ";")
+	for _, sql := range lines {
+		sql = strings.TrimSpace(sql)
+		if sql != "" {
+			getDB(c).Exec(sql)
+		}
+	}
+	isInit = true
+	c.Next()
+}
 
 const (
 	CASH_SCORE  = "score"
@@ -42,8 +66,8 @@ func passwd(pass, sign string) string {
 }
 
 func Init(api, admin, command *core.WebRouter) {
-
-	adg := admin.Group("appbuild", core.ApiCheckoutLoginMiddleWare)
+	isOnline = true
+	adg := admin.Group("appbuild", initDB, core.ApiCheckoutLoginMiddleWare)
 	adg.Post("modules", adminModuleListAction)
 	adg.Post("module_save", adminModuleSaveAction)
 	adg.Post("items", adminModuleItemsAction)

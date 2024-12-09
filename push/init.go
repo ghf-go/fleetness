@@ -1,7 +1,10 @@
 package push
 
 import (
+	"strings"
 	"time"
+
+	_ "embed"
 
 	"github.com/ghf-go/fleetness/core"
 	"github.com/ghf-go/fleetness/core/session"
@@ -13,10 +16,29 @@ var (
 	dbConName    = "default"
 	cacheConName = "default"
 	isOnline     = false
+	isInit       = false
 	allSse       = map[string]*core.Sse{}
 	userSse      = map[uint64]map[string]*core.Sse{}
 )
 
+//go:embed init.sql
+var initSql string
+
+func initDB(c *core.GContent) {
+	if isInit {
+		c.Next()
+		return
+	}
+	lines := strings.Split(initSql, ";")
+	for _, sql := range lines {
+		sql = strings.TrimSpace(sql)
+		if sql != "" {
+			getDB(c).Exec(sql)
+		}
+	}
+	isInit = true
+	c.Next()
+}
 func SetDbConName(name string) {
 	dbConName = name
 }
@@ -33,7 +55,7 @@ func getCahce(c *core.GContent) *redis.Client {
 
 func Init(api, admin, command *core.WebRouter, ge *core.GEngine) {
 	isOnline = true
-	api.Post("regdevice", apiRegDeviceAction) //上报用户设备
+	api.Post("regdevice", apiRegDeviceAction, initDB) //上报用户设备
 	ge.RouterAny("sse_notify", func(c *core.GContent) {
 		c.Sse(func(s *core.Sse) {
 			allSse[s.GetKey()] = s

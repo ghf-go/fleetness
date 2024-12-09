@@ -7,7 +7,7 @@
       style="display: none"
       @change="fileChange"
     />
-    <div ref="header" class="header">
+    <div ref="header" class="header" key="editor">
       <span class="ql-formats">
         <select class="ql-font"></select>
         <select class="ql-size"></select>
@@ -66,13 +66,15 @@ import Quill from "quill";
 import "quill/dist/quill.core.css";
 import "quill/dist/quill.bubble.css";
 import "quill/dist/quill.snow.css";
+
 export default {
   name: "Editor",
   props: ["modelValue"],
   emits: ["update:modelValue"],
+  quillEdit: null,
   data() {
     return {
-      quill: null,
+      $quill: null,
       editorConf: {
         readOnly: false,
         theme: "snow",
@@ -89,25 +91,23 @@ export default {
   mounted() {
     this.initEditor();
   },
-  // beforeUnmount() {
-  //   this.quill = null;
-  //   delete this.quill;
-  // },
+  beforeUnmount() {
+    this.quillEdit = null;
+    delete this.quillEdit;
+  },
 
   methods: {
     fileChange(e) {
-      const _this = this;
+      console.log("insert IMG fource", this.quillEdit.hasFocus());
       this.$uploadFile(e.target.files[0], (url) => {
-        _this.quill.focus();
-        this.$nextTick(() => {
-          _this.quill.focus();
-          console.log("插入图片", url, _this.quill);
-          const range = _this.quill.getSelection();
-          if (range) {
-            _this.quill.insertEmbed(range.index, "image", url);
-            _this.quill.setSelection(range.index + 1);
-          }
-        });
+        if (this.quillEdit == null) {
+          this.quillEdit.focus();
+        }
+        const range = this.quillEdit.getSelection();
+        if (range) {
+          this.quillEdit.insertEmbed(range.index, "image", url);
+          this.quillEdit.setSelection(range.index + 1);
+        }
       });
     },
     //初始化编辑器
@@ -116,20 +116,16 @@ export default {
       this.editorConf.modules.toolbar.handlers.image = () => {
         this.$refs.mfiles.click();
       };
-      Quill.debug("info");
-      this.quill = new Quill(this.$refs.editor_quill, this.editorConf);
-      // this.quill.enable(false);
+      // Quill.debug("info");
+      this.quillEdit = new Quill(this.$refs.editor_quill, this.editorConf);
+      this.quillEdit.enable(true);
       // this.quill.setContents(this.modelValue);
-      this.quill.enable(true);
-
-      // this.quill.setContents(this.modelValue);
-
-      // this.quill.on("text-change", () => {
-      //   let html = this.$refs.Content.children[0].innerHTML;
-      //   const text = this.quill.getText();
-      //   if (html === "<p><br></p>") html = "";
-      //   this.$emit("update:modelValue", html);
-      // });
+      this.quillEdit.on("text-change", () => {
+        let html = this.$refs.editor_quill.children[0].innerHTML;
+        if (html === "<p><br></p>") html = "";
+        console.log(html);
+        this.$emit("update:modelValue", html);
+      });
     },
   },
 };
@@ -148,6 +144,8 @@ export default {
     img {
       max-width: 100%;
     }
+    max-height: 90%;
+    overflow: scroll;
   }
 }
 </style>

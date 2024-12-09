@@ -1,6 +1,8 @@
 package order
 
 import (
+	_ "embed"
+
 	"github.com/ghf-go/fleetness/core"
 	"github.com/redis/go-redis/v9"
 	"gorm.io/gorm"

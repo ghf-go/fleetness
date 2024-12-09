@@ -6,6 +6,15 @@ import (
 	"github.com/ghf-go/fleetness/core/utils"
 )
 
+// 接口请求数据
+type ApiParam struct {
+	AppVer   string `json:"app_ver"`
+	WgtVer   string `json:"wgt_ver"`
+	Platform string `json:"platform"`
+	OsVer    string `json:"os_ver"`
+	OsLang   string `json:"os_lang"`
+	ID       uint64 `json:"id"`
+}
 type PageParam struct {
 	ID        uint64   `json:"id"`
 	Page      int      `json:"page"`
