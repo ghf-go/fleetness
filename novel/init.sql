@@ -22,7 +22,7 @@ CREATE TABLE
         `update_ip` VARCHAR(20) NOT NULL DEFAULT '' COMMENT '更新IP',
         PRIMARY KEY (`id`),
         KEY `idx_user` (`user_id`),
-        KEY `idx_name` (`name`),
+        UNIQUE KEY `uniq_name` (`name`),
         KEY `idx_create` (`create_at`),
         KEY `idx_update` (`update_at`)
     ) ENGINE = innodb DEFAULT CHARSET = utf8mb4 COMMENT = '小说列表';

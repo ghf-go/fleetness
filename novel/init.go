@@ -50,7 +50,30 @@ func getCache(c *core.GContent) *redis.Client {
 
 func Init(api, admin, command *core.WebRouter) {
 	isOnline = true
-	// g := api.Group("praise", core.ApiCheckoutLoginMiddleWare, initDB)
-	// g.Post("praise", praiseAction)
-	// g.Post("unpraise", unPraiseAction)
+	g := api.Group("novel", core.ApiCheckoutLoginMiddleWare, initDB)
+	g.Post("author_tx", apiAuthorApplyTxAction)
+	g.Post("author_tx_list", apiAuthorTxListAction)
+	g.Post("author_income", apiAuthorIncomeAction)
+	g.Post("author_novel_info", apiAuthorNovelInfoAction)
+	g.Post("author_novel_list", apiAuthorNovelListAction)
+	g.Post("author_novel_save", apiAuthorSaveNovelAction)
+	g.Post("author_session_save", apiAuthorSectionSaveAction)
+
+	g.Post("user_info", apiInfoAuthorAction)
+	g.Post("history", apiNovelHistoryAction)
+	g.Post("info", apiNovelInfoAction)
+	g.Post("list", apiNovelListAction)
+	g.Post("read", apiNovelReadAction)
+	g.Post("subscribe", apiSubscribeAction)
+	g.Post("unsubscribe", apiUnSubscribeAction)
+	g.Post("subscribe_list", apiSubscribeListAction)
+
+	ag := api.Group("novel", core.ApiCheckoutLoginMiddleWare, initDB)
+	ag.Post("audit_novel", adminNovelAuditAction)
+	ag.Post("wait_novel", adminNovelWaitAuditAction)
+	ag.Post("audit_section", adminSectionAduitAction)
+	ag.Post("wait_section ", adminSectionWaitAuditAction)
+	ag.Post("tx", adminTxListAction)
+	ag.Post("pay", adminTxPayAction)
+
 }
